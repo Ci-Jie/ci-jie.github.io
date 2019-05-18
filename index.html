@@ -337,7 +337,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://ci-jie.github.io/2019/05/12/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://ci-jie.github.io/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="James">
@@ -357,7 +357,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/12/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+                <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="post-title-link" itemprop="url">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
               
             
           </h1>
@@ -382,12 +382,46 @@
                 
               
 
-              <time title="創建時間：2019-05-12 21:18:35" itemprop="dateCreated datePublished" datetime="2019-05-12T21:18:35+08:00">2019-05-12</time>
+              <time title="創建時間：2019-03-25 10:10:00" itemprop="dateCreated datePublished" datetime="2019-03-25T10:10:00+08:00">2019-03-25</time>
             
 
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新於</span>
+                
+                <time title="修改時間：2019-05-18 14:51:32" itemprop="dateModified" datetime="2019-05-18T14:51:32+08:00">2019-05-18</time>
+              
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分類於</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Ceph/" itemprop="url" rel="index"><span itemprop="name">Ceph</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -401,8 +435,8 @@
                 </span>
             
                 <span class="post-meta-item-text">評論數：</span>
-                <a href="/2019/05/12/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/05/12/hello-world/" itemprop="commentCount"></span>
+                <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -431,11 +465,11 @@
 
       
         
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+          <p>使用 Object Storage 一陣子以後，或許你會發現儲存的檔案愈多要找檔案愈麻煩。因此 Ceph 在 K(Kraken) 版以後有提供一個 sync module 可以將資料同步到 Elasticsearch，方便使用者或管理人員利用 query 語法快速找到你想要搜尋檔案的 metadata。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/12/hello-world/#more" rel="contents">
+              <a class="btn" href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/#more" rel="contents">
                 閱讀全文 &raquo;
               </a>
             </div>
@@ -531,7 +565,35 @@
               
 
               
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">分類</span>
+                  
+                </div>
+              
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">標籤</span>
+                  
+                </div>
               
             </nav>
           
