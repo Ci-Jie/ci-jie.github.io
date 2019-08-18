@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>手動部署 Ceph Nautilus(14.2.2) - James&#39;s Blog</title>
+
+
+    <meta name="description" content="對於剛進入 Ceph 領域的讀者，部署 Ceph 可能會採用相對應的部署工具，例如：ceph-deploy。雖然它可以幫助我們快速建立 Ceph 叢集，但是對於 Ceph 整體部署流程與過程中每個 Components(如：MON, MDS)等，運作方式可能會有疑惑。 因此希望可以透過本篇文章一步一步帶領讀者安裝 Ceph 叢集，讓讀者可以理解每個步驟用途與叢集運作的流程。">
+<meta name="keywords" content="Ceph,Cloud Native">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手動部署 Ceph Nautilus(14.2.2)">
+<meta property="og:url" content="http://ci-jie.github.io/2019/08/18/手動部署-Ceph-Nautilus/index.html">
+<meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="對於剛進入 Ceph 領域的讀者，部署 Ceph 可能會採用相對應的部署工具，例如：ceph-deploy。雖然它可以幫助我們快速建立 Ceph 叢集，但是對於 Ceph 整體部署流程與過程中每個 Components(如：MON, MDS)等，運作方式可能會有疑惑。 因此希望可以透過本篇文章一步一步帶領讀者安裝 Ceph 叢集，讓讀者可以理解每個步驟用途與叢集運作的流程。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://ci-jie.github.io/images/Ceph_Nautilus/logo.png">
+<meta property="og:updated_time" content="2019-08-18T05:23:52.897Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手動部署 Ceph Nautilus(14.2.2)">
+<meta name="twitter:description" content="對於剛進入 Ceph 領域的讀者，部署 Ceph 可能會採用相對應的部署工具，例如：ceph-deploy。雖然它可以幫助我們快速建立 Ceph 叢集，但是對於 Ceph 整體部署流程與過程中每個 Components(如：MON, MDS)等，運作方式可能會有疑惑。 因此希望可以透過本篇文章一步一步帶領讀者安裝 Ceph 叢集，讓讀者可以理解每個步驟用途與叢集運作的流程。">
+<meta name="twitter:image" content="http://ci-jie.github.io/images/Ceph_Nautilus/logo.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/cijie.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/cijie.png" alt="手動部署 Ceph Nautilus(14.2.2)" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/Ci-Jie">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜尋" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="/images/Ceph_Nautilus/logo.png" alt="手動部署 Ceph Nautilus(14.2.2)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分鐘 閱讀文 (大約 1664 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                手動部署 Ceph Nautilus(14.2.2)
+            
+        </h1>
+        <div class="content">
+            <p>對於剛進入 Ceph 領域的讀者，部署 Ceph 可能會採用相對應的部署工具，例如：ceph-deploy。雖然它可以幫助我們快速建立 Ceph 叢集，但是對於 Ceph 整體部署流程與過程中每個 Components(如：MON, MDS)等，運作方式可能會有疑惑。</p>
+<p>因此希望可以透過本篇文章一步一步帶領讀者安裝 Ceph 叢集，讓讀者可以理解每個步驟用途與叢集運作的流程。</p>
+<a id="more"></a>
+<h2 id="環境"><a href="#環境" class="headerlink" title="環境"></a>環境</h2><p>本篇文章利用 VirutalBox 建立一台 Ubuntu 16.04 虛擬機做 Ceph All in One，並且在實體機器規劃一個虛擬硬碟空間作為 Ceph OSD 使用。</p>
+<p>在 VitualBox 掛載一顆虛擬硬碟後，可以透過 <code>fdisk</code> 指令再作進一步的 partitions。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">參數</th>
+<th style="text-align:center">數值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Operating System</td>
+<td style="text-align:center">Ubuntu 16.04 LTS</td>
+</tr>
+<tr>
+<td style="text-align:center">Host Name</td>
+<td style="text-align:center">ceph</td>
+</tr>
+<tr>
+<td style="text-align:center">Private Network</td>
+<td style="text-align:center">172.17.1.100</td>
+</tr>
+<tr>
+<td style="text-align:center">Ceph Version</td>
+<td style="text-align:center">14.2.2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h2><h3 id="Ceph-MON"><a href="#Ceph-MON" class="headerlink" title="Ceph MON"></a>Ceph MON</h3><p>更新套件集。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ apt update</span><br><span class="line">$ apt upgrade -y</span><br></pre></td></tr></table></figure></p>
+<p>增加 release.asc Key。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -q -O- &apos;https://download.ceph.com/keys/release.asc&apos; | sudo apt-key add -</span><br></pre></td></tr></table></figure></p>
+<p>增加 Ceph Repo 到 source list。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt-add-repository &apos;deb https://download.ceph.com/debian-nautilus/ xenial main&apos;</span><br></pre></td></tr></table></figure></p>
+<p>再次更新套件<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt update</span><br></pre></td></tr></table></figure></p>
+<p>安裝 Ceph 與 Ceph RADOSGW 相關套件。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt install -y ceph radosgw radosgw-agent</span><br></pre></td></tr></table></figure></p>
+<p>確認 Ceph 版本(Version)。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph -v</span><br></pre></td></tr></table></figure></p>
+<p>替 Ceph 產生 UUID<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ uuidgen</span><br><span class="line">cb9d566e-48e5-4810-9163-5c7784c8b3c0</span><br></pre></td></tr></table></figure></p>
+<p>目錄切換至 <code>/etc/ceph/</code> 並且建立 <code>ceph.conf</code> 配置檔，將以下配置內容增加至 <code>ceph.conf</code> 配置檔內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ cd /etc/ceph/</span><br><span class="line">$ vim ceph.conf</span><br><span class="line"></span><br><span class="line"># Version 14.2.2</span><br><span class="line">[global]</span><br><span class="line">fsid = cb9d566e-48e5-4810-9163-5c7784c8b3c0</span><br><span class="line"></span><br><span class="line">mon initial members = mon</span><br><span class="line"></span><br><span class="line">mon host = 172.17.1.100</span><br><span class="line"></span><br><span class="line">public network = 172.17.1.0/24</span><br><span class="line"></span><br><span class="line">cluster network = 172.17.1.0/24</span><br><span class="line"></span><br><span class="line">auth cluster required = cephx</span><br><span class="line">auth service required = cephx</span><br><span class="line">auth client required = cephx</span><br><span class="line"></span><br><span class="line">mon max pg per osd = 1000</span><br><span class="line">mon allow pool delete = true</span><br><span class="line">osd crush update on start = false</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>fsid 填入前步驟所建立的 UUID</p>
+</blockquote>
+<p>建立一把名為 <code>ceph.mon.keyring</code> 的 Ceph MON secret key 並且儲存於 <code>/tmp</code> 底下，賦予 mon 全部存取權限。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon &apos;allow *&apos;</span><br><span class="line"></span><br><span class="line">creating /tmp/ceph.mon.keyring</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>–gen-key 表示系統自動產生 secret key</p>
+</blockquote>
+<p>建立一把名為 <code>ceph.client.admin.keyring</code> 的 Ceph clent.admin key 並儲存於 <code>/etc/ceph/</code> 底下，賦予全部(MON, OSD, MDS 與 MGR) 存取權限。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admin --cap mon &apos;allow *&apos; --cap osd &apos;allow *&apos; --cap mds &apos;allow *&apos; --cap mgr &apos;allow *&apos;</span><br><span class="line"></span><br><span class="line">creating /etc/ceph/ceph.client.admin.keyring</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>ceph.mon.keyring</code> 內容複製至 <code>ceph.client.admin.keyring</code> 內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring</span><br><span class="line"></span><br><span class="line">importing contents of /etc/ceph/ceph.client.admin.keyring into /tmp/ceph.mon.keyring</span><br></pre></td></tr></table></figure></p>
+<p>替 Ceph 建立 monitor map。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ monmaptool --create --add mon 172.17.1.100:6789 --fsid `ceph-conf --lookup fsid` /tmp/monmap</span><br><span class="line"></span><br><span class="line">monmaptool: monmap file /tmp/monmap</span><br><span class="line">monmaptool: set fsid to cb9d566e-48e5-4810-9163-5c7784c8b3c0</span><br><span class="line">monmaptool: writing epoch 0 to /tmp/monmap (1 monitors)</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R ceph:ceph /etc/ceph</span><br><span class="line">$ chown -R ceph:ceph /var/lib/ceph/mon</span><br><span class="line">$ chown -R ceph:ceph /tmp/monmap</span><br><span class="line">$ chown -R ceph:ceph /tmp/ceph.mon.keyring</span><br></pre></td></tr></table></figure></p>
+<p>初始化 Ceph MON。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-mon --mkfs --id mon --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown ceph:ceph -R /var/lib/ceph/mon</span><br></pre></td></tr></table></figure></p>
+<p>啟動 Ceph MON。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable ceph-mon@mon.service</span><br><span class="line">$ systemctl start ceph-mon@mon.service</span><br><span class="line">$ systemctl status ceph-mon@mon.service</span><br><span class="line"></span><br><span class="line">● ceph-mon@mon.service - Ceph cluster monitor daemon</span><br><span class="line">   Loaded: loaded (/lib/systemd/system/ceph-mon@.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Sun 2019-08-18 04:32:05 UTC; 33ms ago</span><br><span class="line"> Main PID: 21154 ((ceph-mon))</span><br><span class="line">   CGroup: /system.slice/system-ceph\x2dmon.slice/ceph-mon@mon.service</span><br><span class="line">           └─21154 (ceph-mon)</span><br><span class="line"></span><br><span class="line">Aug 18 04:32:05 ceph systemd[1]: Started Ceph cluster monitor daemon.</span><br></pre></td></tr></table></figure></p>
+<h3 id="Ceph-MGR"><a href="#Ceph-MGR" class="headerlink" title="Ceph MGR"></a>Ceph MGR</h3><p>建立 bootstrap keyrings。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-create-keys --id mon</span><br></pre></td></tr></table></figure></p>
+<p>利用 <code>client.admin</code> key 建立名為 client.bootstrap-osd 的 ceph.keyring。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-authtool -C ceph.keyring -n client.bootstrap-osd -a AQBp1lhdBuU7JRAAPx5h/9bsviXgNcbtGWulcA==</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>步驟內 AQBp1lhdBuU7JRAAPx5h/9bsviXgNcbtGWulcA== 為 client.admin key，可利用 <code>cat ceph.client.admin.keyring</code> 指令查詢。</p>
+</blockquote>
+<p>將 key 增加至 auth entries 內並賦予對應存取權限。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph auth get-or-create mgr.mgr mon &apos;allow profile mgr&apos; osd &apos;allow *&apos; mds &apos;allow *&apos;</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>mgr.mgr</code> key 匯出並儲存於 <code>keyring</code> 檔案內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph auth get-or-create mgr.mgr -o keyring</span><br></pre></td></tr></table></figure></p>
+<p>在 <code>/var/lib/ceph/mgr/</code> 建立 <code>ceph-mgr</code> 目錄，並將 <code>keyring</code> 移至該目錄內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/lib/ceph/mgr/ceph-mgr</span><br><span class="line">$ mv keyring /var/lib/ceph/mgr/ceph-mgr</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R ceph:ceph /var/lib/ceph/mgr/ceph-mgr</span><br></pre></td></tr></table></figure></p>
+<p>啟動 Ceph MGR。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable ceph-mgr@mgr.service</span><br><span class="line">$ systemctl start ceph-mgr@mgr.service</span><br><span class="line">$ systemctl status ceph-mgr@mgr.service</span><br></pre></td></tr></table></figure></p>
+<h3 id="OSD"><a href="#OSD" class="headerlink" title="OSD"></a>OSD</h3><p>將 <code>client.bootstrap-osd</code> key 匯出並儲存於 <code>/var/lib/ceph/bootstrap-osd/</code> 目錄下 <code>ceph.keyring</code> 檔案內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ceph auth get client.bootstrap-osd -o /var/lib/ceph/bootstrap-osd/ceph.keyring</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R ceph:ceph /var/lib/ceph/bootstrap-osd</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>/dev/sdc1</code> 至 <code>/dev/sdc4</code> 作為 Ceph OSD。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-volume lvm create --bluestore --data /dev/sdc1</span><br><span class="line">$ ceph-volume lvm create --bluestore --data /dev/sdc2</span><br><span class="line">$ ceph-volume lvm create --bluestore --data /dev/sdc3</span><br><span class="line">$ ceph-volume lvm create --bluestore --data /dev/sdc4</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R ceph:ceph /var/lib/ceph/osd/ceph-0</span><br><span class="line">$ chown -R ceph:ceph /var/lib/ceph/osd/ceph-1</span><br><span class="line">$ chown -R ceph:ceph /var/lib/ceph/osd/ceph-2</span><br><span class="line">$ chown -R ceph:ceph /var/lib/ceph/osd/ceph-3</span><br></pre></td></tr></table></figure></p>
+<p>在 Ceph CRUSH Map 中規劃 OSD01 - OSD04 host。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ ceph osd crush add-bucket OSD01 host</span><br><span class="line"></span><br><span class="line">added bucket OSD01 type host to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add-bucket OSD02 host</span><br><span class="line"></span><br><span class="line">added bucket OSD02 type host to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add-bucket OSD03 host</span><br><span class="line"></span><br><span class="line">added bucket OSD03 type host to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add-bucket OSD04 host</span><br><span class="line"></span><br><span class="line">added bucket OSD04 type host to crush map</span><br></pre></td></tr></table></figure></p>
+<p>將所有的 host(OSD01 - OSD04) 移至 default root 底下。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ ceph osd crush move OSD01 root=default</span><br><span class="line"></span><br><span class="line">moved item id -3 name &apos;OSD01&apos; to location &#123;root=default&#125; in crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush move OSD02 root=default</span><br><span class="line"></span><br><span class="line">moved item id -4 name &apos;OSD02&apos; to location &#123;root=default&#125; in crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush move OSD03 root=default</span><br><span class="line"></span><br><span class="line">moved item id -5 name &apos;OSD03&apos; to location &#123;root=default&#125; in crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush move OSD04 root=default</span><br><span class="line"></span><br><span class="line">moved item id -6 name &apos;OSD04&apos; to location &#123;root=default&#125; in crush map</span><br></pre></td></tr></table></figure></p>
+<p>將 osd.0 - osd.4 綁定至對應的 OSD01 - OSD04 並賦予全部權重皆為 1.0。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ ceph osd crush add osd.0 1.0 root=default host=OSD01</span><br><span class="line"></span><br><span class="line">add item id 0 name &apos;osd.0&apos; weight 1 at location &#123;host=OSD01,root=default&#125; to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add osd.1 1.0 root=default host=OSD02</span><br><span class="line"></span><br><span class="line">add item id 1 name &apos;osd.1&apos; weight 1 at location &#123;host=OSD02,root=default&#125; to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add osd.2 1.0 root=default host=OSD03</span><br><span class="line"></span><br><span class="line">add item id 2 name &apos;osd.2&apos; weight 1 at location &#123;host=OSD03,root=default&#125; to crush map</span><br><span class="line"></span><br><span class="line">$ ceph osd crush add osd.3 1.0 root=default host=OSD04</span><br><span class="line"></span><br><span class="line">add item id 3 name &apos;osd.3&apos; weight 1 at location &#123;host=OSD04,root=default&#125; to crush map</span><br></pre></td></tr></table></figure></p>
+<h3 id="MDS"><a href="#MDS" class="headerlink" title="MDS"></a>MDS</h3><p>在 keyring 內增加 mds.mds key。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ceph-authtool --create-keyring keyring --gen-key -n mds.mds</span><br><span class="line"></span><br><span class="line">[mds.mds]</span><br><span class="line">	key = AQDJ3Fhd4cISDRAAWKhKoqlGnmm39CaC5oTcWw==</span><br><span class="line"></span><br><span class="line">$ ceph auth add mds.mds osd &quot;allow rwx&quot; mds &quot;allow&quot; mon &quot;allow profile mds&quot; -i keyring</span><br><span class="line"></span><br><span class="line">added key for mds.mds</span><br></pre></td></tr></table></figure></p>
+<p>在 /var/lib/ceph/mds/ 建立 ceph-mds 目錄，並將 keyring 移至該目錄內。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/lib/ceph/mds/ceph-mds</span><br><span class="line">$ mv keyring /var/lib/ceph/mds/ceph-mds</span><br></pre></td></tr></table></figure></p>
+<p>修改相關檔案擁有者與群組。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R ceph:ceph /var/lib/ceph/mds/</span><br></pre></td></tr></table></figure></p>
+<p>啟動 Ceph MDS。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable ceph-mds@mds.service</span><br><span class="line">$ systemctl start ceph-mds@mds.service</span><br><span class="line">$ systemctl status ceph-mds@mds.service</span><br></pre></td></tr></table></figure></p>
+<h2 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h2><p>利用 <code>ceph -s</code> 指令查詢當前 Ceph 叢集狀態。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">root@ceph:/etc/ceph# ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     cb9d566e-48e5-4810-9163-5c7784c8b3c0</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">    mon: 1 daemons, quorum mon (age 30m)</span><br><span class="line">    mgr: mgr(active, since 18m)</span><br><span class="line">    osd: 4 osds: 4 up (since 12m), 4 in (since 12m)</span><br><span class="line"></span><br><span class="line">  data:</span><br><span class="line">    pools:   0 pools, 0 pgs</span><br><span class="line">    objects: 0 objects, 0 B</span><br><span class="line">    usage:   61 MiB used, 3.9 GiB / 4 GiB avail</span><br><span class="line">    pgs:</span><br></pre></td></tr></table></figure></p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h2><ul>
+<li><a href="https://docs.ceph.com/docs/master/" target="_blank" rel="noopener">https://docs.ceph.com/docs/master/</a> </li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Ceph/">Ceph</a>, <a class="has-link-grey -link" href="/tags/Cloud-Native/">Cloud Native</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/">
+                <span class="level-item">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2019/08/18/手動部署-Ceph-Nautilus/';
+        this.page.identifier = '2019/08/18/手動部署-Ceph-Nautilus/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpeg" alt="James.Li">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        James.Li
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        A Research and Development Engineer (R&amp;D Engineer) at ASUS
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Taiwan, NewTaipei</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        2
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分類
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        1
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        標籤
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        4
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/Ci-Jie" target="_blank">
+                追蹤</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/Ci-Jie">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://www.facebook.com/cijie.li">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分類
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Ceph/">
+            <span class="level-start">
+                <span class="level-item">Ceph</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/Ceph_Nautilus/logo.png" alt="手動部署 Ceph Nautilus(14.2.2)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-25T02:10:00.000Z">2019-03-25</time></div>
+                    <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="title has-link-black-ter is-size-6 has-text-weight-normal">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Ceph/">
+                        <span class="tag">Ceph</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cloud-Native/">
+                        <span class="tag">Cloud Native</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Elasticsearch/">
+                        <span class="tag">Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Object-Storage/">
+                        <span class="tag">Object Storage</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/Ceph_Nautilus/logo.png" alt="手動部署 Ceph Nautilus(14.2.2)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-25T02:10:00.000Z">2019-03-25</time></div>
+                    <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="title has-link-black-ter is-size-6 has-text-weight-normal">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Ceph/">
+                        <span class="tag">Ceph</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cloud-Native/">
+                        <span class="tag">Cloud Native</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Elasticsearch/">
+                        <span class="tag">Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Object-Storage/">
+                        <span class="tag">Object Storage</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/cijie.png" alt="手動部署 Ceph Nautilus(14.2.2)" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 James&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-TW");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到頁首" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="請輸入關鍵字..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

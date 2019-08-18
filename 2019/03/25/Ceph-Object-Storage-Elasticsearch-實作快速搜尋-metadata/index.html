@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="使用 Object Storage 一陣子以後，或許你會發現儲存的檔案愈多要找檔案愈麻煩。因此 Ceph 在 K(Kraken) 版以後有提供一個 sync module 可以將資料同步到 Elasticsearch，方便使用者或管理人員利用 query 語法快速找到你想要搜尋檔案的 metadata。">
-<meta name="keywords" content="Ceph,Object Storage,Elasticsearch">
+<meta name="keywords" content="Ceph,Object Storage,Elasticsearch,Cloud Native">
 <meta property="og:type" content="article">
 <meta property="og:title" content="透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋">
 <meta property="og:url" content="http://ci-jie.github.io/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/index.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="使用 Object Storage 一陣子以後，或許你會發現儲存的檔案愈多要找檔案愈麻煩。因此 Ceph 在 K(Kraken) 版以後有提供一個 sync module 可以將資料同步到 Elasticsearch，方便使用者或管理人員利用 query 語法快速找到你想要搜尋檔案的 metadata。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-18T02:24:46.293Z">
+<meta property="og:updated_time" content="2019-08-18T03:34:18.958Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋">
 <meta name="twitter:description" content="使用 Object Storage 一陣子以後，或許你會發現儲存的檔案愈多要找檔案愈麻煩。因此 Ceph 在 K(Kraken) 版以後有提供一個 sync module 可以將資料同步到 Elasticsearch，方便使用者或管理人員利用 query 語法快速找到你想要搜尋檔案的 metadata。">
@@ -37,7 +37,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
 
 
     
@@ -159,7 +159,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分鐘 閱讀文 (大約 1555 個字)
+                    10 分鐘 閱讀文 (大約 1541 個字)
                 </span>
                 
                 
@@ -252,13 +252,11 @@
 <p>注意：需在 /etc/ceph/ceph.client.radosgw.keyring 中加入 client.radosgw.gateway2 的 key</p>
 </blockquote>
 <p>啟動 client.radosgw.gateway<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw -n client.radosgw.gateway -c /etc/ceph/radosgw.conf</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/Elasticsearch&amp;ObejctStorage/RGW1.png" alt="Radosgw1" title="Radosgw1"></p>
 <p>建立 test-zone-2<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw-admin zone create --rgw-realm=test-realm  --rgw-zonegroup=test-zonegroup --rgw-zone=test-zone-2 --access-key=test --secret=test --endpoints=http://192.168.1.226:8002</span><br><span class="line">&#123;</span><br><span class="line">    &quot;id&quot;: &quot;d0a13b78-251b-4314-b026-722dfbe79ff1&quot;,</span><br><span class="line">    &quot;name&quot;: &quot;test-zone-2&quot;,</span><br><span class="line">    &quot;domain_root&quot;: &quot;test-zone-2.rgw.meta:root&quot;,</span><br><span class="line">    &quot;control_pool&quot;: &quot;test-zone-2.rgw.control&quot;,</span><br><span class="line">    &quot;gc_pool&quot;: &quot;test-zone-2.rgw.log:gc&quot;,</span><br><span class="line">    &quot;lc_pool&quot;: &quot;test-zone-2.rgw.log:lc&quot;,</span><br><span class="line">    &quot;log_pool&quot;: &quot;test-zone-2.rgw.log&quot;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>修改 test-zone-2 的配置，更改 tier-type 與 tier-config 並指向 Elasticsearch 的 Port。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw-admin zone modify --rgw-realm=test-realm  --rgw-zonegroup=test-zonegroup --rgw-zone=test-zone-2 --tier-type=elasticsearch --tier-config=endpoint=http://192.168.1.226:9200</span><br><span class="line">&#123;</span><br><span class="line">    &quot;id&quot;: &quot;d0a13b78-251b-4314-b026-722dfbe79ff1&quot;,</span><br><span class="line">    &quot;name&quot;: &quot;test-zone-2&quot;,</span><br><span class="line">    &quot;domain_root&quot;: &quot;test-zone-2.rgw.meta:root&quot;,</span><br><span class="line">    &quot;control_pool&quot;: &quot;test-zone-2.rgw.control&quot;,</span><br><span class="line">    &quot;gc_pool&quot;: &quot;test-zone-2.rgw.log:gc&quot;,</span><br><span class="line">    &quot;lc_pool&quot;: &quot;test-zone-2.rgw.log:lc&quot;,</span><br><span class="line">    &quot;log_pool&quot;: &quot;test-zone-2.rgw.log&quot;,</span><br><span class="line">    &quot;intent_log_pool&quot;: &quot;test-zone-2.rgw.log:intent&quot;,</span><br><span class="line">    &quot;usage_log_pool&quot;: &quot;test-zone-2.rgw.log:usage&quot;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>更新當前 Realm 底下數據<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw-admin period update --commit</span><br><span class="line">&#123;</span><br><span class="line">    &quot;id&quot;: &quot;0d0783ec-c5c7-4e31-a1e5-ee9a81f9b08a&quot;,</span><br><span class="line">    &quot;epoch&quot;: 2,</span><br><span class="line">    ...</span><br><span class="line">    &quot;period_map&quot;: &#123;</span><br><span class="line">        &quot;id&quot;: &quot;0d0783ec-c5c7-4e31-a1e5-ee9a81f9b08a&quot;,</span><br><span class="line">        &quot;zonegroups&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;id&quot;: &quot;ff420afa-3caa-4cdb-8e2e-595f8c0dc150&quot;,</span><br><span class="line">                &quot;name&quot;: &quot;test-zonegroup&quot;,</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        ...</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>啟動 client.radosgw.gateway2<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw -n client.radosgw.gateway2 -c /etc/ceph/radosgw.conf</span><br></pre></td></tr></table></figure></p>
 <p>開啟瀏覽器輸入 192.168.1.226:8002 確認 Radosgw 服務正常</p>
-<p><img src="/images/Elasticsearch&amp;ObejctStorage/RGW2.png" alt="Radosgw2" title="Radosgw2"></p>
 <blockquote>
 <p>注意：Radosgw2 無法提供服務是正常的，因為若宣告 type 為 Elasticsearch 系統不會建立 bucket.data pool。</p>
 </blockquote>
@@ -283,7 +281,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Ceph/">Ceph</a>, <a class="has-link-grey -link" href="/tags/Elasticsearch/">Elasticsearch</a>, <a class="has-link-grey -link" href="/tags/Object-Storage/">Object Storage</a>
+                    <a class="has-link-grey -link" href="/tags/Ceph/">Ceph</a>, <a class="has-link-grey -link" href="/tags/Cloud-Native/">Cloud Native</a>, <a class="has-link-grey -link" href="/tags/Elasticsearch/">Elasticsearch</a>, <a class="has-link-grey -link" href="/tags/Object-Storage/">Object Storage</a>
                 </div>
             </div>
         </div>
@@ -295,41 +293,21 @@
 
 
 
-<div class="card">
-    <div class="card-content">
-        <h3 class="menu-label has-text-centered">喜歡這篇文章嗎? 贊助一下作者吧!</h3>
-        <div class="buttons is-centered">
-            
-                
-<div class="notification is-danger">
-    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
-</div>
 
-                
-                
-<div class="notification is-danger">
-    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
-</div>
 
-                
-                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
-
-<div class="notification is-danger">
-    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
-</div>
-
-                
-                
-<div class="notification is-danger">
-    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
-</div>
-
-                
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/08/18/手動部署-Ceph-Nautilus/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">手動部署 Ceph Nautilus(14.2.2)</span>
+            </a>
         </div>
+        
+        
     </div>
 </div>
-
-
 
 
 
@@ -399,7 +377,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        1
+                        2
                     </p>
                 </div>
             </div>
@@ -419,7 +397,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        3
+                        4
                     </p>
                 </div>
             </div>
@@ -455,41 +433,6 @@
     
         
 
-<div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-        <h3 class="menu-label">
-            連結
-        </h3>
-        <ul class="menu-list">
-        
-            <li>
-                <a class="level is-mobile" href="https://hexo.io" target="_blank">
-                    <span class="level-left">
-                        <span class="level-item">Hexo</span>
-                    </span>
-                    <span class="level-right">
-                        <span class="level-item tag">hexo.io</span>
-                    </span>
-                </a>
-            </li>
-        
-            <li>
-                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
-                    <span class="level-left">
-                        <span class="level-item">PPOffice</span>
-                    </span>
-                    <span class="level-right">
-                        <span class="level-item tag">github.com</span>
-                    </span>
-                </a>
-            </li>
-        
-        </ul>
-        </div>
-    </div>
-</div>
-
 
     
         
@@ -506,24 +449,13 @@
                 <span class="level-item">Ceph</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li>
             </ul>
         </div>
     </div>
 </div>
-    
-        
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="menu-label">
-            標籤雲
-        </h3>
-        <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Elasticsearch/" style="font-size: 10px;">Elasticsearch</a> <a href="/tags/Object-Storage/" style="font-size: 10px;">Object Storage</a>
-    </div>
-</div>
-
     
     
         <div class="column-right-shadow is-hidden-widescreen ">
@@ -534,6 +466,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/Ceph_Nautilus/logo.png" alt="手動部署 Ceph Nautilus(14.2.2)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -567,6 +518,17 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2019</span>
@@ -593,7 +555,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Ceph/">
                         <span class="tag">Ceph</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cloud-Native/">
+                        <span class="tag">Cloud Native</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -636,6 +605,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/Ceph_Nautilus/logo.png" alt="手動部署 Ceph Nautilus(14.2.2)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋">
@@ -666,6 +654,17 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2019</span>
@@ -692,7 +691,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Ceph/">
                         <span class="tag">Ceph</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Cloud-Native/">
+                        <span class="tag">Cloud Native</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
