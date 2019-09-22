@@ -7,17 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>彙整: 2019/3 - James&#39;s Blog</title>
+<title>Ceph RGW + OpenStack Keystone 配置教學(上篇) - James&#39;s Blog</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/archives/2019/03/index.html">
+    <meta name="description" content="Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！">
+<meta name="keywords" content="OpenStack,Keystone">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph RGW + OpenStack Keystone 配置教學(上篇)">
+<meta property="og:url" content="http://ci-jie.github.io/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-09-22T02:46:20.794Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="Ceph RGW + OpenStack Keystone 配置教學(上篇)">
+<meta name="twitter:description" content="Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -92,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="Ceph RGW + OpenStack Keystone 配置教學(上篇)" height="28">
             
             </a>
         </div>
@@ -142,39 +147,138 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="tag is-link">
-        三月 2019
-        </h3>
-        <div class="timeline">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
         
-            <article class="media">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-03-25T02:10:00.000Z">2019-03-25</time>
-                        <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="title has-link-black-ter is-size-6 has-text-weight-normal">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
                 </div>
-            </article>
-        
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分鐘 閱讀文 (大約 905 個字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Ceph RGW + OpenStack Keystone 配置教學(上篇)
+            
+        </h1>
+        <div class="content">
+            <p>Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！</p>
+<a id="more"></a>
+<h2 id="前置條件"><a href="#前置條件" class="headerlink" title="前置條件"></a>前置條件</h2><ul>
+<li>需具備一台 CentOS 7 實體機器或虛擬機器</li>
+<li>安裝機器需具備 MariaDB</li>
+</ul>
+<h2 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h2><p>在 <code>/etc/selinux/config</code> 將 SELINUX 註解移除並把值更改為 <code>disabled</code> 來關閉 SELinux，更改完儲存並重新開機</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ setenforce 0</span><br><span class="line">$ vim /etc/selinux/config</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">SELINUX=disabled</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
+<p>添加 OpenStack Keystine(Stein) rpm 並安裝</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ yum install http://repos.fedorapeople.org/repos/openstack/openstack-stein/rdo-release-stein-1.noarch.rpm</span><br><span class="line">$ yum update</span><br><span class="line">$ yum install openstack-keystone httpd mod_wsgi python-openstackclient gcc</span><br></pre></td></tr></table></figure>
+<p>在 MariaDB 建立 <code>Keystone</code> 資料庫並且建立 <code>keystone</code> 使用者賦予 <code>任意</code> 及 <code>localhost</code> 存取 <code>keystone</code> 資料表權限</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -u root -p</span><br><span class="line">$ CREATE DATABASE keystone;</span><br><span class="line">$ GRANT ALL PRIVILEGES ON keystone.* TO &apos;keystone&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;&lt;KEYSTONE_USER_PASSWORD&gt;&apos;;</span><br><span class="line">$ GRANT ALL PRIVILEGES ON keystone.* TO &apos;keystone&apos;@&apos;%&apos; IDENTIFIED BY &apos;&lt;KEYSTONE_USER_PASSWORD&gt;&apos;;</span><br><span class="line">$ exit</span><br></pre></td></tr></table></figure>
+<p>修改 OpenStack Keystone 配置檔，在 <code>[database]</code> 加入資料庫配置</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/keystone/keystone.conf</span><br><span class="line">...</span><br><span class="line">[database]</span><br><span class="line">connection = mysql+pymysql://keystone:&lt;KEYSTONE_USER_PASSWORD&gt;@&lt;DATABASE_IP&gt;:&lt;DATABASE_PORT&gt;/keystone</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在 <code>[token]</code> 配置以 <code>fernet</code> 提供 Token 讓其他元件可以進行驗證，更改完後儲存並離開</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">[token]</span><br><span class="line">provider = fernet</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>根據 OpenStack Keystone 需具備的資料表來同步資料庫</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ su -s /bin/sh -c &quot;keystone-manage db_sync&quot; keystone</span><br></pre></td></tr></table></figure>
+<p>利用 <code>fernet</code> 針對 Token 進行初始化與建立驗證所需的 Token</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone</span><br><span class="line">$ keystone-manage credential_setup --keystone-user keystone --keystone-group keystone</span><br></pre></td></tr></table></figure>
+<p>建立 OpenStack Keystone 的 <code>admin</code> 使用者與建立預設的 domain, project 與 endpoint 等</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ keystone-manage bootstrap --bootstrap-password &lt;ADMIN_PASSWORD&gt; \</span><br><span class="line">    --bootstrap-admin-url http://&lt;KEYSTONE_IP&gt;:5000/v3/ \</span><br><span class="line">    --bootstrap-internal-url http://&lt;KEYSTONE_IP&gt;:5000/v3/ \</span><br><span class="line">    --bootstrap-public-url http://&lt;KEYSTONE_IP&gt;:5000/v3/ \</span><br><span class="line">    --bootstrap-region-id RegionOne</span><br></pre></td></tr></table></figure>
+<p>啟動 OpenStack Keystone 服務</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable httpd.service</span><br><span class="line">$ systemctl start httpd.service</span><br><span class="line">$ systemctl status httpd.service</span><br></pre></td></tr></table></figure>
+<p>建立 adminrc 檔案來儲存 admin 使用者的環境變數，輸入完成後儲存並且離開</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ vim adminrc</span><br><span class="line"></span><br><span class="line">export OS_USERNAME=admin</span><br><span class="line">export OS_PASSWORD=12345678</span><br><span class="line">export OS_PROJECT_NAME=admin</span><br><span class="line">export OS_USER_DOMAIN_NAME=Default</span><br><span class="line">export OS_PROJECT_DOMAIN_NAME=Default</span><br><span class="line">export OS_AUTH_URL=http://172.17.1.110:5000/v3</span><br><span class="line">export OS_IDENTITY_API_VERSION=3</span><br></pre></td></tr></table></figure>
+<p>在使用任何 OpenStack 指令時記得先將環境變數添加到系統中</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ source adminrc</span><br></pre></td></tr></table></figure>
+<h2 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h2><p>利用 OpenStack 指令任意呼叫服務，確認是否收到 OpenStack 回應。以下是利用查詢當前 OpenStack 已存在的服務為例，若是剛建立的環境，可以看到系統回應 Keystone 服務的資訊</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ openstack service list</span><br><span class="line">+----------------------------------+----------+----------+</span><br><span class="line">| ID                               | Name     | Type     |</span><br><span class="line">+----------------------------------+----------+----------+</span><br><span class="line">| 826222db3f2649d9b14be428f4873e8c | keystone | identity |</span><br><span class="line">+----------------------------------+----------+----------+</span><br></pre></td></tr></table></figure>
+<h2 id="常見問題"><a href="#常見問題" class="headerlink" title="常見問題"></a>常見問題</h2><p>OpenStack 套件沒有提供 version 指令查詢當前安裝的 Keystone 版本。因此我們需要透過 yum 當前已安裝的套件來確認當前 Keystone 安裝的版本</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ yum list | grep keystone</span><br><span class="line"></span><br><span class="line">openstack-keystone.noarch              1:15.0.0-1.el7           @openstack-stein</span><br><span class="line">python2-keystone.noarch                1:15.0.0-1.el7           @openstack-stein</span><br><span class="line">python2-keystoneauth1.noarch           3.13.1-1.el7             @openstack-stein</span><br><span class="line">python2-keystoneclient.noarch          1:3.19.0-1.el7           @openstack-stein</span><br><span class="line">python2-keystonemiddleware.noarch      6.0.0-1.el7              @openstack-stein</span><br><span class="line">openstack-barbican-keystone-listener.noarch</span><br><span class="line">openstack-keystone-doc.noarch          1:15.0.0-1.el7           openstack-stein</span><br><span class="line">puppet-keystone.noarch                 14.4.0-1.el7             openstack-stein</span><br><span class="line">python-keystoneauth1-doc.noarch        3.13.1-1.el7             openstack-stein</span><br><span class="line">python-keystoneclient-doc.noarch       1:3.19.0-1.el7           openstack-stein</span><br><span class="line">python-keystonemiddleware-doc.noarch   6.0.0-1.el7              openstack-stein</span><br><span class="line">python2-keystone-tests.noarch          1:15.0.0-1.el7           openstack-stein</span><br><span class="line">python2-keystone-tests-tempest.noarch  0.2.0-1.el7              openstack-stein</span><br><span class="line">python2-keystone-tests-tempest-doc.noarch</span><br><span class="line">python2-keystoneclient-tests.noarch    1:3.19.0-1.el7           openstack-stein</span><br></pre></td></tr></table></figure>
+<p>若遇到系統回應 Missing value auth-url required for auth plugin password 訊息，表示當前驗證發生問題，即可能是為將使用者的環境變數加至系統中。若以 <code>admin</code> 使用者為例，可以利用安裝最後所建立的 <code>adminrc</code> 來解決此問題</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ source adminrc</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在建置過程中，可以針對不同的使用者建立不同的 rc 檔來儲存使用者的參數，以方便做使用者切換</p>
+</blockquote>
+<p>若針對本篇教學有任何疑問或有敘述錯誤的地方，歡迎在底下留言討論唷～</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Keystone/">Keystone</a>, <a class="has-link-grey -link" href="/tags/OpenStack/">OpenStack</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
 </div>
 
 
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/24/Ceph-Object-Storage-Placement-介紹/">
+                <span class="level-item">Ceph Object Storage Placement 介紹</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/';
+        this.page.identifier = '2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
 </div>
                 
 
@@ -668,7 +772,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="Ceph RGW + OpenStack Keystone 配置教學(上篇)" height="28">
                 
                 </a>
                 <p class="is-size-7">
