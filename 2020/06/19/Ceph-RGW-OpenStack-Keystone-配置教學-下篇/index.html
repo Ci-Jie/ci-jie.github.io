@@ -7,17 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>彙整: 2019 - James&#39;s Blog</title>
+<title>Ceph RGW + OpenStack Keystone 配置教學(下篇) - James&#39;s Blog</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/archives/2019/index.html">
+    <meta name="description" content="事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀上篇的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！">
+<meta name="keywords" content="OpenStack,Keystone,Ceph,RGW">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph RGW + OpenStack Keystone 配置教學(下篇)">
+<meta property="og:url" content="http://ci-jie.github.io/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀上篇的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2020-06-20T13:44:44.287Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="Ceph RGW + OpenStack Keystone 配置教學(下篇)">
+<meta name="twitter:description" content="事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀上篇的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -92,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="Ceph RGW + OpenStack Keystone 配置教學(下篇)" height="28">
             
             </a>
         </div>
@@ -142,96 +147,140 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="tag is-link">
-        2019
-        </h3>
-        <div class="timeline">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
         
-            <article class="media">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-19T01:38:00.000Z">2020-06-19</time>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph RGW + OpenStack Keystone 配置教學(上篇)</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a> / <a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/">Ceph</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/RGW/">RGW</a>
                 </div>
-            </article>
-        
-            <article class="media">
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-08-24T12:32:00.000Z">2019-08-24</time>
-                        <a href="/2019/08/24/Ceph-Object-Storage-Placement-介紹/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph Object Storage Placement 介紹</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time>
-                        <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分鐘 閱讀文 (大約 768 個字)
+                </span>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-03-25T02:10:00.000Z">2019-03-25</time>
-                        <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="title has-link-black-ter is-size-6 has-text-weight-normal">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Ceph RGW + OpenStack Keystone 配置教學(下篇)
+            
+        </h1>
+        <div class="content">
+            <p>事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀<a href="https://ci-jie.github.io/2019/09/22/Ceph-RGW-OpenStack-Keystone-%E9%85%8D%E7%BD%AE%E6%95%99%E5%AD%B8-%E4%B8%8A%E7%AF%87/">上篇</a>的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！</p>
+<a id="more"></a>
+<p>話不多說就開始吧！！</p>
+<h2 id="前置條件"><a href="#前置條件" class="headerlink" title="前置條件"></a>前置條件</h2><ul>
+<li>在虛擬機器或實體機器上已安裝 Ceph RGW 與 OpenStack Keystone</li>
+</ul>
+<h2 id="環境變數"><a href="#環境變數" class="headerlink" title="環境變數"></a>環境變數</h2><ul>
+<li>OS_USERNAME=admin</li>
+<li>OS_PASSWORD=password</li>
+<li>OS_PROJECT_NAME=admin</li>
+<li>OS_USER_DOMAIN_NAME=Default</li>
+<li>OS_PROJECT_DOMAIN_NAME=Default</li>
+<li>OS_AUTH_URL=<a href="http://172.17.1.100:5000/v3" target="_blank" rel="noopener">http://172.17.1.100:5000/v3</a></li>
+<li>OS_IDENTITY_API_VERSION=3</li>
+</ul>
+<blockquote>
+<p>注意，注意，注意，很重要所以講三次！！本篇介紹採用環境變數與上篇有些許不同。讀者需特別注意！</p>
+</blockquote>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>首先修改 <code>/etc/ceph/ceph.conf</code> 檔案，並加入 OpenStack keystone 相關配置，如：domain, project, user …等。</p>
+<p>整體配置如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/ceph/ceph.conf</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">[client.radosgw.gateway]</span><br><span class="line">host = 172.17.1.110:6789</span><br><span class="line">keyring = /etc/ceph/ceph.radosgw.keyring</span><br><span class="line">log file = /var/log/ceph/client.radosgw.gateway.log</span><br><span class="line">rgw enable usage log = true</span><br><span class="line"></span><br><span class="line"># For keystone of openstack</span><br><span class="line">rgw keystone api version = 3</span><br><span class="line"># Enable Keystone Auth for S3 APIs</span><br><span class="line">rgw keystone url = http://172.17.1.100:5000</span><br><span class="line">rgw s3 auth use keystone = true</span><br><span class="line">rgw keystone admin user = admin</span><br><span class="line">rgw keystone admin password = password</span><br><span class="line">rgw keystone admin domain = Default</span><br><span class="line">rgw keystone admin project = admin</span><br><span class="line">rgw keystone accepted roles = admin</span><br><span class="line">rgw keystone verify ssl = false</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>OpenStack Keystone 參數部分讀者需依照自己建置 OpenStack Keystone 的設定自行修改。</p>
+</blockquote>
+<p>Ceph RGW 配置完成後，需重新啟動</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart ceph-radosgw@radosgw.gateway</span><br></pre></td></tr></table></figure>
+<p>配置完成後，就可以開始在建立 OpenStack Keystone 內建立 Ceph RGW 的使用者了，透過 <code>openstack ec2 credentials</code> 指令進行建立。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ openstack ec2 credentials create --project admin --user admin</span><br><span class="line"></span><br><span class="line">+------------+--------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Field      | Value                                                                                                                                |</span><br><span class="line">+------------+--------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| access     | 25f332ce156248e6b1370a30276db861                                                                                                     |</span><br><span class="line">| links      | &#123;u&apos;self&apos;: u&apos;http://172.17.1.100:5000/v3/users/4a6ccdd4c5d44b90951afd1c7f0051e0/credentials/OS-EC2/25f332ce156248e6b1370a30276db861&apos;&#125; |</span><br><span class="line">| project_id | 11545854141449f7abb6b7782f61cbce                                                                                                     |</span><br><span class="line">| secret     | ddd08e575e7949e0ba0efeed5386d679                                                                                                     |</span><br><span class="line">| trust_id   | None                                                                                                                                 |</span><br><span class="line">| user_id    | 4a6ccdd4c5d44b90951afd1c7f0051e0                                                                                                     |</span><br><span class="line">+------------+--------------------------------------------------------------------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<p>輸入完成後，系統會回應如上的資訊，其中 <code>access</code> 與 <code>secret</code> 就是 Ceph RGW 的 access key 與 secret key。</p>
+<h2 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h2><p>在 OpenStack Keystone 使用者建立完成後，需要任意呼叫一支 Ceph RGW API 或透過第三方工具，如: <a href="https://s3browser.com/" target="_blank" rel="noopener">s3browser</a>, <a href="https://cyberduck.io/" target="_blank" rel="noopener">cyberduck</a> 進行登入，才會在 Ceph RGW 看到該使用者資訊。</p>
+<p>登入前檢查 Ceph RGW 當前使用者列表。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw-admin user list</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &quot;admin&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>開啟 Cyberduck 並點擊視窗中左下角的”+”符號新增一個”S3(HTTP)”的連線，並且輸入您 Server URL 與 RGW Port，以及本篇介紹在 OpenStack Keystone 所建立的 ec2 credential access key 與 secret key 進行登入。 </p>
+<p><img src="/images/RGW&amp;Keystone/login.png" alt="Cyberduck Login" title="Cyberduck Login"></p>
+<p>最後，我們再透過 Ceph RGW 指令檢查當前使用者列表。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ radosgw-admin user list</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &quot;admin&quot;,</span><br><span class="line">    &quot;11545854141449f7abb6b7782f61cbce&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>從上述可以看到多一個名為 <code>11545854141449f7abb6b7782f61cbce</code> 的使用者，該名稱來自於 OpenStack Project Name。</p>
+</blockquote>
+<p>若針對本篇教學有任何疑問或有敘述錯誤的地方，歡迎在底下留言討論唷～</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Ceph/">Ceph</a>, <a class="has-link-grey -link" href="/tags/Keystone/">Keystone</a>, <a class="has-link-grey -link" href="/tags/OpenStack/">OpenStack</a>, <a class="has-link-grey -link" href="/tags/RGW/">RGW</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
 </div>
 
 
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/">
+                <span class="level-item">Ceph RGW + OpenStack Keystone 配置教學(上篇)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/';
+        this.page.identifier = '2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
 </div>
                 
 
@@ -787,7 +836,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="Ceph RGW + OpenStack Keystone 配置教學(下篇)" height="28">
                 
                 </a>
                 <p class="is-size-7">
