@@ -7,18 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>分類 - James&#39;s Blog</title>
+<title>HAProxy Data Plane API  - James&#39;s Blog</title>
 
 
-    <meta name="keywords" content="OpenStack,Keystone,Ceph,RGW,Cloud Native,Object Storage,Elasticsearch,load balancer">
-<meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/categories/index.html">
+    <meta name="description" content="在使用 HAProxy 時，常常需要針對不同的服務進行不一樣的配置，如修改 backend server 或 load balancing mode 等。因此 HAProxy 針對動態配置提供一套 API 介面，讓使用者可以透過 RESTful API 方式動態更改 HAProxy 的配置，更詳細的說明可以參考 haproxytech/dataplaneapi。">
+<meta name="keywords" content="load balancer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HAProxy Data Plane API ">
+<meta property="og:url" content="http://ci-jie.github.io/2020/10/25/HAProxy-Data-Plane-API/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="在使用 HAProxy 時，常常需要針對不同的服務進行不一樣的配置，如修改 backend server 或 load balancing mode 等。因此 HAProxy 針對動態配置提供一套 API 介面，讓使用者可以透過 RESTful API 方式動態更改 HAProxy 的配置，更詳細的說明可以參考 haproxytech/dataplaneapi。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2020-10-25T09:35:58.846Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="HAProxy Data Plane API ">
+<meta name="twitter:description" content="在使用 HAProxy 時，常常需要針對不同的服務進行不一樣的配置，如修改 backend server 或 load balancing mode 等。因此 HAProxy 針對動態配置提供一套 API 介面，讓使用者可以透過 RESTful API 方式動態更改 HAProxy 的配置，更詳細的說明可以參考 haproxytech/dataplaneapi。">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -93,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="HAProxy Data Plane API " height="28">
             
             </a>
         </div>
@@ -107,7 +111,7 @@
                 <a class="navbar-item"
                 href="/archives">Archives</a>
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/categories">Categories</a>
                 
                 <a class="navbar-item"
@@ -143,51 +147,161 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-<div class="card widget">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                分類
-            </h3>
-            <ul class="menu-list">
-            <li>
-        <a class="level is-marginless" href="/categories/Ceph/">
-            <span class="level-start">
-                <span class="level-item">Ceph</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">3</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/OpenStack/">
-            <span class="level-start">
-                <span class="level-item">OpenStack</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/OpenStack/Keystone/">
-            <span class="level-start">
-                <span class="level-item">Keystone</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/load-balancer/">
-            <span class="level-start">
-                <span class="level-item">load balancer</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li>
-            </ul>
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-10-25T08:12:00.000Z">2020-10-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/load-balancer/">load balancer</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分鐘 閱讀文 (大約 642 個字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                HAProxy Data Plane API 
+            
+        </h1>
+        <div class="content">
+            <p>在使用 HAProxy 時，常常需要針對不同的服務進行不一樣的配置，如修改 backend server 或 load balancing mode 等。因此 HAProxy 針對動態配置提供一套 API 介面，讓使用者可以透過 RESTful API 方式動態更改 HAProxy 的配置，更詳細的說明可以參考 <a href="https://github.com/haproxytech/dataplaneapi" target="_blank" rel="noopener">haproxytech/dataplaneapi</a>。</p>
+<a id="more"></a>
+<h2 id="環境"><a href="#環境" class="headerlink" title="環境"></a>環境</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">OS</th>
+<th style="text-align:center">Host Name</th>
+<th>Private Network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">CentOS 7</td>
+<td style="text-align:center">HAProxy</td>
+<td>192.168.5.2</td>
+</tr>
+<tr>
+<td style="text-align:center">CentOS 7</td>
+<td style="text-align:center">httpd1</td>
+<td>192.168.5.3</td>
+</tr>
+<tr>
+<td style="text-align:center">CentOS 7</td>
+<td style="text-align:center">httpd2</td>
+<td>192.168.5.4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="安裝-HAProxy"><a href="#安裝-HAProxy" class="headerlink" title="安裝 HAProxy"></a>安裝 HAProxy</h2><p>下載 HAProxy 2.2.4(LTS) 並解壓縮</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://www.haproxy.org/download/2.2/src/haproxy-2.2.4.tar.gz</span><br><span class="line">$ tar -zxvf haproxy-2.2.4.tar.gz</span><br></pre></td></tr></table></figure>
+<p>進入 <code>haproxy-2.2.4</code> 目錄並針對主機作業系統進行編譯</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd haproxy-2.2.4</span><br><span class="line">$ make TARGET=linux-glibc</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安裝需要 <code>make</code> 與 <code>gcc</code> 兩個套件，若是使用 <code>CentOS</code> 的作業系統可利用 <code>yum install</code> 指令進行安裝。</p>
+</blockquote>
+<p>安裝 HAProxy 2.2.4</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+<p>建立 HAProxy 紀錄的靜態目錄</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/haproxy</span><br><span class="line">$ mkdir -p /var/lib/haproxy </span><br><span class="line">$ touch /var/lib/haproxy/stats</span><br></pre></td></tr></table></figure>
+<p>建立 symbolic link</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ln -s /usr/local/sbin/haproxy /usr/sbin/haproxy</span><br></pre></td></tr></table></figure>
+<p>將 <code>HAProxy</code> 交由 <code>systemd</code> 進行管理</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cp examples/haproxy.init /etc/init.d/haproxy</span><br><span class="line">$ chmod 755 /etc/init.d/haproxy</span><br><span class="line">$ systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+<p>建立 <code>haproxy</code> use 與 group</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ useradd -r haproxy</span><br></pre></td></tr></table></figure>
+<p>建立 <code>/etc/haproxy/haproxy.cfg</code> 檔案並寫入基本配置</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/haproxy/haproxy.cfg</span><br><span class="line">global</span><br><span class="line">   log /dev/log local0</span><br><span class="line">   log /dev/log local1 notice</span><br><span class="line">   chroot /var/lib/haproxy</span><br><span class="line">   stats timeout 30s</span><br><span class="line">   user haproxy</span><br><span class="line">   group haproxy</span><br><span class="line">   daemon</span><br><span class="line"></span><br><span class="line">defaults</span><br><span class="line">   log global</span><br><span class="line">   mode http</span><br><span class="line">   option httplog</span><br><span class="line">   option dontlognull</span><br><span class="line">   timeout connect 5000</span><br><span class="line">   timeout client 50000</span><br><span class="line">   timeout server 50000</span><br><span class="line"></span><br><span class="line">frontend http_front</span><br><span class="line">   bind *:80</span><br><span class="line">   stats uri /haproxy?stats</span><br><span class="line">   default_backend http_back</span><br><span class="line"></span><br><span class="line">backend http_back</span><br><span class="line">   balance roundrobin</span><br><span class="line">   server httpd1 192.168.5.3:80 check</span><br><span class="line">   server httpd2 192.168.5.4:80 check</span><br></pre></td></tr></table></figure>
+<p>啟動 <code>HAProxy</code> 服務</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start haproxy</span><br><span class="line">$ systemctl status haproxy</span><br><span class="line">● haproxy.service - SYSV: HA-Proxy is a TCP/HTTP reverse proxy which is particularly suited for high availability environments.</span><br><span class="line">   Loaded: loaded (/etc/rc.d/init.d/haproxy; bad; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Sun 2020-10-25 09:01:42 UTC; 1s ago</span><br><span class="line">     Docs: man:systemd-sysv-generator(8)</span><br><span class="line">  Process: 13370 ExecStart=/etc/rc.d/init.d/haproxy start (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 13381 (haproxy)</span><br><span class="line">   CGroup: /system.slice/haproxy.service</span><br><span class="line">           └─13381 /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid</span><br></pre></td></tr></table></figure>
+<p>到這裡，基本的 HAProxy 已經安裝完成，接下來進行 HAProxy Data Plane API 安裝</p>
+<h2 id="安裝-HAProxy-Data-Plane-API"><a href="#安裝-HAProxy-Data-Plane-API" class="headerlink" title="安裝 HAProxy Data Plane API"></a>安裝 HAProxy Data Plane API</h2><p>下載 <code>dataplaneapi</code></p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/haproxytech/dataplaneapi/releases/download/v2.1.0/dataplaneapi_2.1.0_Linux_x86_64.tar.gz</span><br></pre></td></tr></table></figure>
+<p>將 <code>build/dataplaneapi</code> 檔案複製至 <code>/usr/local/bin</code> 目錄</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp build/dataplaneapi /usr/local/bin</span><br></pre></td></tr></table></figure>
+<p>在 <code>/etc/haproxy/haproxy.cfg</code> 的 global 中加入 <code>master-worker</code> ，並在檔案最底部加入 <code>userlist</code> 與 <code>dataplaneapi</code> 配置</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/haproxy/haproxy.cfg</span><br><span class="line"></span><br><span class="line">global</span><br><span class="line">  ...</span><br><span class="line">  master-worker</span><br><span class="line">  </span><br><span class="line">userlist api</span><br><span class="line">  user james insecure-password mypassword</span><br><span class="line">  </span><br><span class="line">program dataplane-api</span><br><span class="line">  command /usr/local/bin/dataplaneapi --host 0.0.0.0 --port 5555 --haproxy-bin /usr/sbin/haproxy --config-file /etc/haproxy/haproxy.cfg --reload-cmd &quot;systemctl reload haproxy&quot; --reload-delay 5 --userlist api</span><br></pre></td></tr></table></figure>
+<p>修改完成後，重新啟動 <code>haproxy</code></p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart haproxy</span><br></pre></td></tr></table></figure>
+<p>啟動後可透過 <code>http://127.0.0.1:5555/v2/docs</code> 參閱可用的 APIs</p>
+<p>若針對本篇教學有任何疑問或有敘述錯誤的地方，歡迎在底下留言討論唷～</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/load-balancer/">load balancer</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
-</div></div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/06/20/Ceph-RGW-OpenStack-Barbican-配置教學-上篇/">
+                <span class="level-item">Ceph RGW + OpenStack Barbican 配置教學(上篇)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2020/10/25/HAProxy-Data-Plane-API/';
+        this.page.identifier = '2020/10/25/HAProxy-Data-Plane-API/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
                 
 
 
@@ -786,7 +900,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="HAProxy Data Plane API " height="28">
                 
                 </a>
                 <p class="is-size-7">

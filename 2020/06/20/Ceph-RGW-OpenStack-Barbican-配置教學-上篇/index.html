@@ -18,7 +18,7 @@
 <meta property="og:description" content="本篇要介紹如何將 Ceph RGW 與 OpenStack Barbican 進行整合，將使用者透過 Ceph Radosgw 上傳的檔案在 Server Site 進行 Server Side Encription - SSE(伺服器端加密)，可以有效提升資料安全性，讓儲存在伺服器端的資料不再是明碼。但相對也存在一定的風險，若儲存在 OpenStack Barbican 的 Secret 刪除，">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2020-06-20T14:18:39.158Z">
+<meta property="og:updated_time" content="2020-10-25T09:34:57.847Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ceph RGW + OpenStack Barbican 配置教學(上篇)">
 <meta name="twitter:description" content="本篇要介紹如何將 Ceph RGW 與 OpenStack Barbican 進行整合，將使用者透過 Ceph Radosgw 上傳的檔案在 Server Site 進行 Server Side Encription - SSE(伺服器端加密)，可以有效提升資料安全性，讓儲存在伺服器端的資料不再是明碼。但相對也存在一定的風險，若儲存在 OpenStack Barbican 的 Secret 刪除，">
@@ -152,7 +152,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-20T13:48:10.000Z">2020-06-20</time>
+                <time class="level-item has-text-grey" datetime="2020-06-20T13:48:00.000Z">2020-06-20</time>
                 
                 
                 <span class="level-item has-text-grey">
@@ -231,6 +231,13 @@
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/10/25/HAProxy-Data-Plane-API/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">HAProxy Data Plane API </span>
+            </a>
+        </div>
         
         
         <div class="level-end">
@@ -311,7 +318,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        6
+                        7
                     </p>
                 </div>
             </div>
@@ -321,7 +328,7 @@
                         分類
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
@@ -331,7 +338,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -401,7 +408,15 @@
             <span class="level-end">
                 <span class="level-item tag">2</span>
             </span>
-        </a></li></ul></li>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/load-balancer/">
+            <span class="level-start">
+                <span class="level-item">load balancer</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
             </ul>
         </div>
     </div>
@@ -421,7 +436,20 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-20T13:48:10.000Z">2020-06-20</time></div>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-25T08:12:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/HAProxy-Data-Plane-API/" class="title has-link-black-ter is-size-6 has-text-weight-normal">HAProxy Data Plane API </a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/load-balancer/">load balancer</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-20T13:48:00.000Z">2020-06-20</time></div>
                     <a href="/2020/06/20/Ceph-RGW-OpenStack-Barbican-配置教學-上篇/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph RGW + OpenStack Barbican 配置教學(上篇)</a>
                     <p class="is-size-7 is-uppercase">
                         
@@ -469,19 +497,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
-                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -493,6 +508,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/06/">
@@ -596,6 +622,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/RGW/">
                         <span class="tag">RGW</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/load-balancer/">
+                        <span class="tag">load balancer</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -627,7 +660,20 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-20T13:48:10.000Z">2020-06-20</time></div>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-25T08:12:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/HAProxy-Data-Plane-API/" class="title has-link-black-ter is-size-6 has-text-weight-normal">HAProxy Data Plane API </a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/load-balancer/">load balancer</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-20T13:48:00.000Z">2020-06-20</time></div>
                     <a href="/2020/06/20/Ceph-RGW-OpenStack-Barbican-配置教學-上篇/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph RGW + OpenStack Barbican 配置教學(上篇)</a>
                     <p class="is-size-7 is-uppercase">
                         
@@ -675,19 +721,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-18T03:29:00.000Z">2019-08-18</time></div>
-                    <a href="/2019/08/18/手動部署-Ceph-Nautilus/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手動部署 Ceph Nautilus(14.2.2)</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -699,6 +732,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/06/">
@@ -802,6 +846,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/RGW/">
                         <span class="tag">RGW</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/load-balancer/">
+                        <span class="tag">load balancer</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
