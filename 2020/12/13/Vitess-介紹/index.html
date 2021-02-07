@@ -10,19 +10,19 @@
 <title>Vitess 介紹 - James&#39;s Blog</title>
 
 
-    <meta name="description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, Git">
+    <meta name="description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitH">
 <meta name="keywords" content="Database,Vitess">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vitess 介紹">
 <meta property="og:url" content="http://ci-jie.github.io/2020/12/13/Vitess-介紹/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
-<meta property="og:description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, Git">
+<meta property="og:description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitH">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2020-12-13T06:37:39.999Z">
+<meta property="og:updated_time" content="2021-02-07T01:30:28.949Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vitess 介紹">
-<meta name="twitter:description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, Git">
+<meta name="twitter:description" content="Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitH">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -181,8 +181,7 @@
             
         </h1>
         <div class="content">
-            <p><img src="/images/Vitess/vitess-logo.png" width="400px"></p>
-<p>Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。<br>Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。<br>Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitHub… 等等。</p>
+            <p>Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。<br>Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。<br>Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitHub… 等等。</p>
 <a id="more"></a>
 <blockquote>
 <p><a href="https://vitess.io/docs/get-started/local/" target="_blank" rel="noopener">官方文件</a>中提到在選擇 MySQL 或 MariaDB 時，建議採用 MySQL 並且版本為 5.7。若要採用 MariaDB 則需要 10.0+ </p>
@@ -255,6 +254,13 @@
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/02/07/Kubernetes-CoreDNS/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Kubernetes CoreDNS 解析 Domain</span>
+            </a>
+        </div>
         
         
         <div class="level-end">
@@ -335,7 +341,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -345,7 +351,7 @@
                         分類
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -355,7 +361,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        12
                     </p>
                 </div>
             </div>
@@ -426,6 +432,14 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Kubernetes/">
+            <span class="level-start">
+                <span class="level-item">Kubernetes</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/OpenStack/">
             <span class="level-start">
                 <span class="level-item">OpenStack</span>
@@ -464,6 +478,19 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-07T01:32:00.000Z">2021-02-07</time></div>
+                    <a href="/2021/02/07/Kubernetes-CoreDNS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Kubernetes CoreDNS 解析 Domain</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Kubernetes/">Kubernetes</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -517,19 +544,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time></div>
-                    <a href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph RGW + OpenStack Keystone 配置教學(上篇)</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a> / <a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -541,6 +555,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/12/">
@@ -636,6 +661,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/CoreDNS/">
+                        <span class="tag">CoreDNS</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Database/">
                         <span class="tag">Database</span>
                         <span class="tag is-grey">1</span>
@@ -653,6 +685,13 @@
                     <a class="tags has-addons" href="/tags/Keystone/">
                         <span class="tag">Keystone</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Kubernetes/">
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -718,6 +757,19 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-07T01:32:00.000Z">2021-02-07</time></div>
+                    <a href="/2021/02/07/Kubernetes-CoreDNS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Kubernetes CoreDNS 解析 Domain</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Kubernetes/">Kubernetes</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-13T06:26:00.000Z">2020-12-13</time></div>
                     <a href="/2020/12/13/Vitess-介紹/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Vitess 介紹</a>
                     <p class="is-size-7 is-uppercase">
@@ -766,19 +818,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time></div>
-                    <a href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Ceph RGW + OpenStack Keystone 配置教學(上篇)</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a> / <a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -790,6 +829,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/12/">
@@ -885,6 +935,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/CoreDNS/">
+                        <span class="tag">CoreDNS</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Database/">
                         <span class="tag">Database</span>
                         <span class="tag is-grey">1</span>
@@ -902,6 +959,13 @@
                     <a class="tags has-addons" href="/tags/Keystone/">
                         <span class="tag">Keystone</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Kubernetes/">
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -961,7 +1025,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 James&nbsp;
+                &copy; 2021 James&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 

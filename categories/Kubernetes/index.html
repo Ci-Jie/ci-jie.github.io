@@ -7,12 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>分類: OpenStack - James&#39;s Blog</title>
+<title>分類: Kubernetes - James&#39;s Blog</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/categories/OpenStack/index.html">
+<meta property="og:url" content="http://ci-jie.github.io/categories/Kubernetes/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
@@ -148,7 +148,7 @@
         <ul>
             <li><a href="/categories">分類</a></li>
             
-            <li class="is-active"><a href="#" aria-current="page">OpenStack</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Kubernetes</a></li>
         </ul>
         </nav>
     </div>
@@ -160,17 +160,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-19T01:38:00.000Z">2020-06-19</time>
+                <time class="level-item has-text-grey" datetime="2021-02-07T01:32:00.000Z">2021-02-07</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/">Ceph</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/RGW/">RGW</a>
+                <a class="has-link-grey -link" href="/categories/Kubernetes/">Kubernetes</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分鐘 閱讀文 (大約 768 個字)
+                    9 分鐘 閱讀文 (大約 1363 個字)
                 </span>
                 
                 
@@ -179,70 +179,19 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/">Ceph RGW + OpenStack Keystone 配置教學(下篇)</a>
+                <a class="has-link-black-ter" href="/2021/02/07/Kubernetes-CoreDNS/">Kubernetes CoreDNS 解析 Domain</a>
             
         </h1>
         <div class="content">
-            <p>事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀<a href="https://ci-jie.github.io/2019/09/22/Ceph-RGW-OpenStack-Keystone-%E9%85%8D%E7%BD%AE%E6%95%99%E5%AD%B8-%E4%B8%8A%E7%AF%87/">上篇</a>的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！</p>
+            <p>筆者最近在部署 Kubernetes 過程中，好奇每個元件究竟安裝與不安裝對 Kubernetes 造成什麼影響？CoreDNS 主要的功能之一是當 Pods 做套件更新或安裝時，可以提供 DNS Forward 功能，將請求轉發至外部進行 Domain 解析，並從正確的位址下載套件進行安裝。</p>
+<p>本篇就聚焦在 CoreDNS 將 Pods 的請求轉發至外部 DNS Server 進行解析的運作流程。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/#more">繼續閱讀</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分鐘 閱讀文 (大約 905 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/">Ceph RGW + OpenStack Keystone 配置教學(上篇)</a>
-            
-        </h1>
-        <div class="content">
-            <p>Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/#more">繼續閱讀</a>
+                <a class="button is-size-7 is-light" href="/2021/02/07/Kubernetes-CoreDNS/#more">繼續閱讀</a>
                 </div>
             </div>
         </div>

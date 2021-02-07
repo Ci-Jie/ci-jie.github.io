@@ -7,17 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>分類: OpenStack - James&#39;s Blog</title>
+<title>Kubernetes CoreDNS 解析 Domain - James&#39;s Blog</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/categories/OpenStack/index.html">
+    <meta name="description" content="筆者最近在部署 Kubernetes 過程中，好奇每個元件究竟安裝與不安裝對 Kubernetes 造成什麼影響？CoreDNS 主要的功能之一是當 Pods 做套件更新或安裝時，可以提供 DNS Forward 功能，將請求轉發至外部進行 Domain 解析，並從正確的位址下載套件進行安裝。 本篇就聚焦在 CoreDNS 將 Pods 的請求轉發至外部 DNS Server 進行解析的運作流程。">
+<meta name="keywords" content="Kubernetes,CoreDNS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes CoreDNS 解析 Domain">
+<meta property="og:url" content="http://ci-jie.github.io/2021/02/07/Kubernetes-CoreDNS/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="筆者最近在部署 Kubernetes 過程中，好奇每個元件究竟安裝與不安裝對 Kubernetes 造成什麼影響？CoreDNS 主要的功能之一是當 Pods 做套件更新或安裝時，可以提供 DNS Forward 功能，將請求轉發至外部進行 Domain 解析，並從正確的位址下載套件進行安裝。 本篇就聚焦在 CoreDNS 將 Pods 的請求轉發至外部 DNS Server 進行解析的運作流程。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2021-02-07T07:08:45.798Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="Kubernetes CoreDNS 解析 Domain">
+<meta name="twitter:description" content="筆者最近在部署 Kubernetes 過程中，好奇每個元件究竟安裝與不安裝對 Kubernetes 造成什麼影響？CoreDNS 主要的功能之一是當 Pods 做套件更新或安裝時，可以提供 DNS Forward 功能，將請求轉發至外部進行 Domain 解析，並從正確的位址下載套件進行安裝。 本篇就聚焦在 CoreDNS 將 Pods 的請求轉發至外部 DNS Server 進行解析的運作流程。">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -92,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="Kubernetes CoreDNS 解析 Domain" height="28">
             
             </a>
         </div>
@@ -143,121 +148,139 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-02-07T01:32:00.000Z">2021-02-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Kubernetes/">Kubernetes</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分鐘 閱讀文 (大約 1363 個字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Kubernetes CoreDNS 解析 Domain
+            
+        </h1>
+        <div class="content">
+            <p>筆者最近在部署 Kubernetes 過程中，好奇每個元件究竟安裝與不安裝對 Kubernetes 造成什麼影響？CoreDNS 主要的功能之一是當 Pods 做套件更新或安裝時，可以提供 DNS Forward 功能，將請求轉發至外部進行 Domain 解析，並從正確的位址下載套件進行安裝。</p>
+<p>本篇就聚焦在 CoreDNS 將 Pods 的請求轉發至外部 DNS Server 進行解析的運作流程。</p>
+<a id="more"></a>
+<h3 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h3><p>首先先檢視當前 Kubernetes 上運行的 Pods。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get po -A -o wide</span><br><span class="line"></span><br><span class="line">NAMESPACE         NAME                                      READY   STATUS    RESTARTS   AGE    IP                NODE     NOMINATED NODE   READINESS GATES</span><br><span class="line">calico-system     calico-kube-controllers-56689cf96-wlv2h   1/1     Running   0          22h    192.168.11.0      k8s-m3   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-node-57fd5                         1/1     Running   0          22h    192.168.20.11     k8s-m2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-node-hl589                         1/1     Running   0          22h    192.168.20.13     k8s-n1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-node-k7w68                         1/1     Running   0          22h    192.168.20.12     k8s-m3   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-node-mgxwl                         1/1     Running   0          22h    192.168.20.10     k8s-m1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-node-sckxv                         1/1     Running   0          22h    192.168.20.14     k8s-n2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-typha-5bc9cc898d-4drrk             1/1     Running   0          22h    192.168.20.14     k8s-n2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-typha-5bc9cc898d-l9hrw             1/1     Running   0          22h    192.168.20.10     k8s-m1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-typha-5bc9cc898d-r2knp             1/1     Running   0          22h    192.168.20.13     k8s-n1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">calico-system     calico-typha-5bc9cc898d-zfnlv             1/1     Running   0          22h    192.168.20.12     k8s-m3   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">default           nginx-deployment-66b6c48dd5-kwmkx         1/1     Running   0          5h3m   192.168.111.194   k8s-n2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">default           nginx-deployment-66b6c48dd5-lssjq         1/1     Running   0          5h3m   192.168.215.65    k8s-n1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-system       kube-proxy-7vn8h                          1/1     Running   0          22h    192.168.20.14     k8s-n2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-system       kube-proxy-8mxrg                          1/1     Running   0          22h    192.168.20.12     k8s-m3   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-system       kube-proxy-gzrlh                          1/1     Running   0          22h    192.168.20.13     k8s-n1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-system       kube-proxy-swk6f                          1/1     Running   0          22h    192.168.20.11     k8s-m2   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-system       kube-proxy-zmnv8                          1/1     Running   0          22h    192.168.20.10     k8s-m1   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">tigera-operator   tigera-operator-b6c4bfdd9-jgl2d           1/1     Running   1          22h    192.168.20.11     k8s-m2   &lt;none&gt;           &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<p>在尚未安裝 CoreDNS 情境時，您會發現在任一個 Pod 內無法向外部資源進行存取。</p>
+<p>這邊筆者先建立一個 Nginx 的 Deployment，並且進去其中一個 Pod 執行 <code>apt update</code> 指令，這時候會發現如下的情況：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -ti nginx-deployment-66b6c48dd5-kwmkx bash</span><br><span class="line">$ apt update</span><br><span class="line">0% [Connecting to deb.debian.org] [Connecting to security.debian.org]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>問題在於無法解析 Ubuntu 套件 Domain，因此無法正常更新套件與安裝套件。</p>
+</blockquote>
+<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>回想一下，不管在安裝 Master Node 或 Worker Node 時，都會啟動 Kubelet，並且帶入 <code>--config=/var/lib/kubelet/config.yml</code> 參數。</p>
+<p>在 <code>/var/lib/kubelet/config.yml</code> 檔案內會需要配置 <code>clusterDNS</code>。這就是運行在這個節點上的 Pods 預設的 DNS Server。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">$ cat /var/lib/kubelet/config.yml</span><br><span class="line"></span><br><span class="line">apiVersion: kubelet.config.k8s.io/v1beta1</span><br><span class="line">kind: KubeletConfiguration</span><br><span class="line">address: 0.0.0.0</span><br><span class="line">port: 10250</span><br><span class="line">readOnlyPort: 10255</span><br><span class="line">authentication:</span><br><span class="line">  anonymous:</span><br><span class="line">    enabled: false</span><br><span class="line">  webhook:</span><br><span class="line">    cacheTTL: 2m0s</span><br><span class="line">    enabled: true</span><br><span class="line">  x509:</span><br><span class="line">    clientCAFile: /etc/kubernetes/pki/ca.pem</span><br><span class="line">authorization:</span><br><span class="line">  mode: Webhook</span><br><span class="line">  webhook:</span><br><span class="line">    cacheAuthorizedTTL: 5m0s</span><br><span class="line">    cacheUnauthorizedTTL: 30s</span><br><span class="line">cgroupDriver: cgroupfs</span><br><span class="line">cgroupsPerQOS: true</span><br><span class="line">clusterDNS:</span><br><span class="line">- 10.96.0.1  // HERE</span><br><span class="line">clusterDomain: cluster.local</span><br><span class="line">containerLogMaxFiles: 5</span><br><span class="line">containerLogMaxSize: 10Mi</span><br><span class="line">contentType: application/vnd.kubernetes.protobuf</span><br><span class="line">cpuCFSQuota: true</span><br><span class="line">cpuManagerPolicy: none</span><br><span class="line">cpuManagerReconcilePeriod: 10s</span><br><span class="line">enableControllerAttachDetach: true</span><br><span class="line">enableDebuggingHandlers: true</span><br><span class="line">enforceNodeAllocatable:</span><br><span class="line">- pods</span><br><span class="line">eventBurst: 10</span><br><span class="line">eventRecordQPS: 5</span><br><span class="line">evictionHard:</span><br><span class="line">  imagefs.available: 15%</span><br><span class="line">  memory.available: 100Mi</span><br><span class="line">  nodefs.available: 10%</span><br><span class="line">  nodefs.inodesFree: 5%</span><br><span class="line">evictionPressureTransitionPeriod: 5m0s</span><br><span class="line">failSwapOn: true</span><br><span class="line">fileCheckFrequency: 20s</span><br><span class="line">hairpinMode: promiscuous-bridge</span><br><span class="line">healthzBindAddress: 127.0.0.1</span><br><span class="line">healthzPort: 10248</span><br><span class="line">httpCheckFrequency: 20s</span><br><span class="line">imageGCHighThresholdPercent: 85</span><br><span class="line">imageGCLowThresholdPercent: 80</span><br><span class="line">imageMinimumGCAge: 2m0s</span><br><span class="line">iptablesDropBit: 15</span><br><span class="line">iptablesMasqueradeBit: 14</span><br><span class="line">kubeAPIBurst: 10</span><br><span class="line">kubeAPIQPS: 5</span><br><span class="line">makeIPTablesUtilChains: true</span><br><span class="line">maxOpenFiles: 1000000</span><br><span class="line">maxPods: 110</span><br><span class="line">nodeStatusUpdateFrequency: 10s</span><br><span class="line">oomScoreAdj: -999</span><br><span class="line">podPidsLimit: -1</span><br><span class="line">registryBurst: 10</span><br><span class="line">registryPullQPS: 5</span><br><span class="line">resolvConf: /etc/resolv.conf</span><br><span class="line">rotateCertificates: true</span><br><span class="line">runtimeRequestTimeout: 2m0s</span><br><span class="line">serializeImagePulls: true</span><br><span class="line">staticPodPath: /etc/kubernetes/manifests</span><br><span class="line">streamingConnectionIdleTimeout: 4h0m0s</span><br><span class="line">syncFrequency: 1m0s</span><br><span class="line">volumeStatsAggPeriod: 1m0s</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如上述情境，若在這個 Worker Node 上運行一個 Pod，預設 DNS Server 為 <code>10.96.0.10</code>。</p>
+</blockquote>
+<p>實際我們進入 <code>nginx-deployment-66b6c48dd5-kwmkx</code> Pod，並且檢視 <code>/etc/resole.conf</code> 檔案。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -ti nginx-deployment-66b6c48dd5-kwmkx bash</span><br><span class="line">$ cat /etc/resolv.conf</span><br><span class="line"></span><br><span class="line">nameserver 10.96.0.10</span><br><span class="line">search default.svc.cluster.local svc.cluster.local cluster.local</span><br><span class="line">options ndots:5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由上述結果可以看出 Pod 會採用 <code>10.96.0.10</code> 作為預設 DNS Server。</p>
+</blockquote>
+<p>接著我們就必須利用 CoreDNS 啟動時，使用 <code>10.96.0.10</code> 作為 ClusterIP，將所有 Pods 請求 Forward 到外部 <code>8.8.8.8</code> 進行 Domain 解析。</p>
+<p>因此在啟動 CoreDNS 時需要在 ConfigMap 中加入 <code>forward . 8.8.8.8:53</code> 配置，並且在 Service 將 ClusterIP 設定為 <code>10.96.0.10</code>。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">$ cat coredns.yml</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  name: coredns</span><br><span class="line">  namespace: kube-system</span><br><span class="line">data:</span><br><span class="line">  Corefile: |</span><br><span class="line">    .:53 &#123;</span><br><span class="line">        errors</span><br><span class="line">        health &#123;</span><br><span class="line">          lameduck 5s</span><br><span class="line">        &#125;</span><br><span class="line">        ready</span><br><span class="line">        kubernetes cluster.local in-addr.arpa ip6.arpa &#123;</span><br><span class="line">          fallthrough in-addr.arpa ip6.arpa</span><br><span class="line">        &#125;</span><br><span class="line">        prometheus :9153</span><br><span class="line">        forward . 8.8.8.8:53</span><br><span class="line">        cache 30</span><br><span class="line">        loop</span><br><span class="line">        reload</span><br><span class="line">        loadbalance</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: kube-dns</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  annotations:</span><br><span class="line">    prometheus.io/port: &quot;9153&quot;</span><br><span class="line">    prometheus.io/scrape: &quot;true&quot;</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kube-dns</span><br><span class="line">    kubernetes.io/cluster-service: &quot;true&quot;</span><br><span class="line">    kubernetes.io/name: &quot;CoreDNS&quot;</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: kube-dns</span><br><span class="line">  clusterIP: 10.96.0.10</span><br><span class="line">  ports:</span><br><span class="line">  - name: dns</span><br><span class="line">    port: 53</span><br><span class="line">    protocol: UDP</span><br><span class="line">  - name: dns-tcp</span><br><span class="line">    port: 53</span><br><span class="line">    protocol: TCP</span><br><span class="line">  - name: metrics</span><br><span class="line">    port: 9153</span><br><span class="line">    protocol: TCP</span><br></pre></td></tr></table></figure>
+<p>配置完成後建立 CoreDNS 服務。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create -f coredns.yml</span><br></pre></td></tr></table></figure>
+<p>啟動完成後，檢視當前所有 Serivce 狀態。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc -A</span><br><span class="line"></span><br><span class="line">NAMESPACE       NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE</span><br><span class="line">calico-system   calico-typha   ClusterIP   10.105.208.37   &lt;none&gt;        5473/TCP                 22h</span><br><span class="line">default         kubernetes     ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP                  28h</span><br><span class="line">kube-system     kube-dns       ClusterIP   10.96.0.10      &lt;none&gt;        53/UDP,53/TCP,9153/TCP   4h39m</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由上述可以看出 CoreDNS 已經被啟動，並且 ClusterIP 為 <code>10.96.0.10</code>。</p>
+</blockquote>
+<p>最後，我們在進入 <code>nginx-deployment-66b6c48dd5-kwmkx</code> Pod 再次進行套件更新。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl exec -ti nginx-deployment-66b6c48dd5-kwmkx bash</span><br><span class="line">$ apt update</span><br><span class="line"></span><br><span class="line">Ign:1 http://deb.debian.org/debian stretch InRelease</span><br><span class="line">Get:2 http://security.debian.org/debian-security stretch/updates InRelease [53.0 kB]</span><br><span class="line">Get:3 http://deb.debian.org/debian stretch-updates InRelease [93.6 kB]</span><br><span class="line">Get:4 http://security.debian.org/debian-security stretch/updates/main amd64 Packages [649 kB]</span><br><span class="line">Get:5 http://deb.debian.org/debian stretch Release [118 kB]</span><br><span class="line">Get:6 http://deb.debian.org/debian stretch-updates/main amd64 Packages [2596 B]</span><br><span class="line">Get:7 http://deb.debian.org/debian stretch Release.gpg [2410 B]</span><br><span class="line">Get:8 http://deb.debian.org/debian stretch/main amd64 Packages [7080 kB]</span><br><span class="line">Fetched 7998 kB in 24s (332 kB/s)</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree</span><br><span class="line">Reading state information... Done</span><br><span class="line">25 packages can be upgraded. Run &apos;apt list --upgradable&apos; to see them.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由上述可以看出現在 Pod 已經可以至外部進行套件更新與安裝。</p>
+</blockquote>
+<h3 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h3><p>由下圖來解釋上述所做的行為，在 <code>Nginx</code> Pod 內下 <code>apt update</code> 指令時，請求根據 DNS Server 轉發至 <code>CoreDNS</code> Pod(10.96.0.10)，再由 <code>CoreDNS</code> Pod 將請求 Forward 到外部 DNS Server(8.8.8.8) 進行解析。因此就可以在 Pod 內正常進行套件的更新與安裝等行為。 </p>
+<p><img src="/images/k8s-coredns/k8s-coredns.png" alt="K8s-CoreDNS" title="K8s-CoreDNS"></p>
+<p>若針對本篇教學有任何疑問或有敘述錯誤的地方，歡迎在底下留言討論唷～</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/CoreDNS/">CoreDNS</a>, <a class="has-link-grey -link" href="/tags/Kubernetes/">Kubernetes</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/12/13/Vitess-介紹/">
+                <span class="level-item">Vitess 介紹</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
     <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/categories">分類</a></li>
-            
-            <li class="is-active"><a href="#" aria-current="page">OpenStack</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2021/02/07/Kubernetes-CoreDNS/';
+        this.page.identifier = '2021/02/07/Kubernetes-CoreDNS/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
 
-    <div class="card">
+<div id="disqus_thread">
     
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-19T01:38:00.000Z">2020-06-19</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/">Ceph</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/Ceph/RGW/">RGW</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分鐘 閱讀文 (大約 768 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/">Ceph RGW + OpenStack Keystone 配置教學(下篇)</a>
-            
-        </h1>
-        <div class="content">
-            <p>事隔多日來繼續介紹後續 Ceph RGW 與 OpenStack Keystone 的整合配置，還沒有讀<a href="https://ci-jie.github.io/2019/09/22/Ceph-RGW-OpenStack-Keystone-%E9%85%8D%E7%BD%AE%E6%95%99%E5%AD%B8-%E4%B8%8A%E7%AF%87/">上篇</a>的讀者可以先閱讀上篇，若有興趣也可逐步跟著這系列的文章進行操作，或許你會對於內容更有感覺唷！</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/06/19/Ceph-RGW-OpenStack-Keystone-配置教學-下篇/#more">繼續閱讀</a>
-                </div>
-            </div>
-        </div>
-        
-        
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-22T02:30:00.000Z">2019-09-22</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/OpenStack/">OpenStack</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/OpenStack/Keystone/">Keystone</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分鐘 閱讀文 (大約 905 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/">Ceph RGW + OpenStack Keystone 配置教學(上篇)</a>
-            
-        </h1>
-        <div class="content">
-            <p>Ceph Object Storage 除了可以自身管理使用者訊息與驗證外，也可以透過 OpenStack Keystone 進行管理。本篇會先介紹如何在 CentOS 7 上安裝 OpenStack Keystone (Version Stein)，後續會在下篇時介紹如何與 Ceph 進行串接！</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/09/22/Ceph-RGW-OpenStack-Keystone-配置教學-上篇/#more">繼續閱讀</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 </div>
                 
 
@@ -981,7 +1004,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="Kubernetes CoreDNS 解析 Domain" height="28">
                 
                 </a>
                 <p class="is-size-7">
