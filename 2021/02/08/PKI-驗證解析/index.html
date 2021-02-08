@@ -7,17 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>標籤: Database - James&#39;s Blog</title>
+<title>HTTPS 驗證解析 - James&#39;s Blog</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/tags/Database/index.html">
+    <meta name="description" content="時常在開發任何應用服務時，會利用 HTTP 協定來串接服務與服務之間的通訊，然而這樣的方式可能存在著一定的風險，因此就有人會想是否可以在傳輸過程中加入驗證機制，來提高資料的安全性，進而衍伸出 TLS 雙向驗證機制。">
+<meta name="keywords" content="TLS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS 驗證解析">
+<meta property="og:url" content="http://ci-jie.github.io/2021/02/08/PKI-驗證解析/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="時常在開發任何應用服務時，會利用 HTTP 協定來串接服務與服務之間的通訊，然而這樣的方式可能存在著一定的風險，因此就有人會想是否可以在傳輸過程中加入驗證機制，來提高資料的安全性，進而衍伸出 TLS 雙向驗證機制。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2021-02-08T08:29:03.528Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="HTTPS 驗證解析">
+<meta name="twitter:description" content="時常在開發任何應用服務時，會利用 HTTP 協定來串接服務與服務之間的通訊，然而這樣的方式可能存在著一定的風險，因此就有人會想是否可以在傳輸過程中加入驗證機制，來提高資料的安全性，進而衍伸出 TLS 雙向驗證機制。">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -92,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="HTTPS 驗證解析" height="28">
             
             </a>
         </div>
@@ -143,56 +148,126 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/tags">標籤</a></li>
-            <li class="is-active"><a href="#" aria-current="page">Database</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
-
-    <div class="card">
     
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-12-13T06:26:00.000Z">2020-12-13</time>
+                <time class="level-item has-text-grey" datetime="2021-02-08T07:03:00.000Z">2021-02-08</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Database/">Database</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Database/Vitess/">Vitess</a>
+                <a class="has-link-grey -link" href="/categories/TLS/">TLS</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分鐘 閱讀文 (大約 1780 個字)
+                    15 分鐘 閱讀文 (大約 2191 個字)
                 </span>
                 
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
                 
             </div>
         </div>
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/12/13/Vitess-介紹/">Vitess 介紹</a>
+                HTTPS 驗證解析
             
         </h1>
         <div class="content">
-            <p>Vitess 是一套基於 MySQL 或 MariaDB 的叢集式資料庫系統，並且提供 Sharding 的概念達到水平擴展的機制。<br>Vitess 採用單一端口的方式，使用者僅需透過單一端口進行資料庫的寫入，讀取或刪除行為，不必在意底層資料庫如何處理該行為，就能達到資料的分散儲存效果。<br>Vitess 目前已經從 CNCF 專案中畢業，已有許多世界級大廠使用，如 Youtube, slack, GitHub… 等等。</p>
+            <p>時常在開發任何應用服務時，會利用 HTTP 協定來串接服務與服務之間的通訊，然而這樣的方式可能存在著一定的風險，因此就有人會想是否可以在傳輸過程中加入驗證機制，來提高資料的安全性，進而衍伸出 TLS 雙向驗證機制。</p>
+<a id="more"></a>
+<p>筆者在了解其中運作原理時，意外在網路上看到一篇<a href="https://www.cnblogs.com/LangXian/p/11282986.html" target="_blank" rel="noopener">文章</a>，用故事方式來描述這之間的關係，覺得還不錯分享給讀者們。</p>
+<p>大意如下：</p>
+<p>有一天 A 公司的業務要去 B 公司進行業務接洽，當業務到達 B 公司時，被 B 公司的警衛攔下，並要求業務出示身份。不過 B 公司沒有人認識這位業務，因此業務只能拿出蓋有 A 公司印章的文件來證明自己是 A 公司的員工。</p>
+<p>聽完以上的敘述雖然可能大致上沒什麼問題，不過有人可能會想到，如果這樣 B 公司有 100 的合作廠商，不就需要記住 100 個公司的印章才能身任身份驗證的任務。</p>
+<p>因此，C 公司看準了這個商機，成為了第三方的驗證機構。在 B 公司信任 C 公司與 C 公司信任 A 的的基礎上，只要 A 公司向 B 公司提出自己與 C 公司的印章，則為合法。如此一來 B 公司只要記得 C 公司印章即可。</p>
+<p>上述 C 公司就是 CA 的角色，驗證的過程如故事情境，接著我們就實際來建置完整的驗證流程。</p>
+<h3 id="cfssl-簡介"><a href="#cfssl-簡介" class="headerlink" title="cfssl 簡介"></a>cfssl 簡介</h3><p>我們使用 cfssl 這個工具來產生金鑰與憑證，<a href="https://github.com/cloudflare/cfssl" target="_blank" rel="noopener">cfssl</a> 是 CloudFlare 公司是基於 Golang 開源的 PKI/TLS 工具。當前僅支援 <code>ECDSA</code> 與 <code>RSA</code> 兩種方式。</p>
+<h3 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h3><p>首先要先安裝 <code>cfssl</code> 工具</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ export CFSSL_URL=https://pkg.cfssl.org/R1.2</span><br><span class="line">$ wget $&#123;CFSSL_URL&#125;/cfssl_linux-amd64 -O /usr/local/bin/cfssl</span><br><span class="line">$ wget $&#123;CFSSL_URL&#125;/cfssljson_linux-amd64 -O /usr/local/bin/cfssljson</span><br><span class="line">$ chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson</span><br></pre></td></tr></table></figure>
+<p>安裝完成後，利用指令檢查當前安裝版本。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cfssl version</span><br><span class="line"></span><br><span class="line">Version: 1.2.0</span><br><span class="line">Revision: dev</span><br><span class="line">Runtime: go1.6</span><br></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在建立服務憑證前，我們需要先建立 <code>ca/ca-csr.json</code> 檔案來產生 CA 憑證與金鑰。<code>ca/ca-csr.json</code> 大致上會描述如下。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ca</span><br><span class="line">$ vim ca-csr.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;CN&quot;: &quot;james-blog.com&quot;,</span><br><span class="line">  &quot;key&quot;: &#123;</span><br><span class="line">    &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">    &quot;size&quot;: 2048</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;names&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;C&quot;: &quot;TW&quot;,</span><br><span class="line">      &quot;ST&quot;: &quot;Taipei&quot;,</span><br><span class="line">      &quot;L&quot;: &quot;Taipei&quot;,</span><br><span class="line">      &quot;O&quot;: &quot;james company&quot;,</span><br><span class="line">      &quot;OU&quot;: &quot;james company&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>CN(Common Name) 用來識別使用的 Domain。</li>
+<li>Key 描述用 RSA 進行加密，並且長度為 2048(當前僅支援 2048 - 8192)</li>
+<li>Name.C 表示國家</li>
+<li>Name.ST 與 L 表示城市</li>
+<li>Name.O 表示公司</li>
+<li>Name.OU 表示公司部門</li>
+</ul>
+</blockquote>
+<p>建立完成後，初始化 CA 憑證與金鑰。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cfssl gencert -initca ca-csr.json | cfssljson -bare ca/ca</span><br><span class="line"></span><br><span class="line">2021/02/08 07:49:22 [INFO] generating a new CA key and certificate from CSR</span><br><span class="line">2021/02/08 07:49:22 [INFO] generate received request</span><br><span class="line">2021/02/08 07:49:22 [INFO] received CSR</span><br><span class="line">2021/02/08 07:49:22 [INFO] generating key: rsa-2048</span><br><span class="line">2021/02/08 07:49:23 [INFO] encoded CSR</span><br><span class="line">2021/02/08 07:49:23 [INFO] signed certificate with serial number 512432585453518655479838519048416241349248297204</span><br></pre></td></tr></table></figure>
+<p>檢視當前 <code>ca/</code> 目錄內的檔案，即 <code>ca-key.pem</code> 為金鑰，<code>ca.pem</code> 為憑證。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ls ca/</span><br><span class="line"></span><br><span class="line">ca.csr  ca-key.pem  ca.pem</span><br></pre></td></tr></table></figure>
+<p>完成後，接著利用 CA 來建立服務的金耀與憑證。我們利用 <code>nginx</code> 作為示範，建立 <code>nginx/nginx-csr.json</code> 檔案。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir nginx</span><br><span class="line">$ vim nginx/nginx-csr.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;CN&quot;: &quot;james-blog.com&quot;,</span><br><span class="line">  &quot;key&quot;: &#123;</span><br><span class="line">    &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">    &quot;size&quot;: 2048</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;names&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;C&quot;: &quot;TW&quot;,</span><br><span class="line">      &quot;ST&quot;: &quot;Taipei&quot;,</span><br><span class="line">      &quot;L&quot;: &quot;Taipei&quot;,</span><br><span class="line">      &quot;O&quot;: &quot;james company&quot;,</span><br><span class="line">      &quot;OU&quot;: &quot;james company&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>這邊我們就用與 CA 相同的檔案內容。</p>
+</blockquote>
+<p>建立 <code>ca-config.json</code> 檔案。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ vim ca-config.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;signing&quot;: &#123;</span><br><span class="line">    &quot;default&quot;: &#123;</span><br><span class="line">      &quot;expiry&quot;: &quot;87600h&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;profiles&quot;: &#123;</span><br><span class="line">      &quot;nginx&quot;: &#123;</span><br><span class="line">        &quot;usages&quot;: [</span><br><span class="line">            &quot;signing&quot;,</span><br><span class="line">            &quot;key encipherment&quot;,</span><br><span class="line">            &quot;server auth&quot;,</span><br><span class="line">            &quot;client auth&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;expiry&quot;: &quot;87600h&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>expiry 表示可用時間為一年</li>
+<li>signing 表示可用於其他簽名證書</li>
+<li>server auth 表示 Client 可以 CA 對 Server 提供的憑證進行驗證</li>
+<li>client auth 表示 Server 可以 CA 對 Client 提供的憑證進行驗證</li>
+</ul>
+</blockquote>
+<p>基於 CA 的憑證與金鑰，產生 <code>nginx</code> 服務憑證與金鑰。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ cfssl gencert \</span><br><span class="line">    -ca=ca/ca.pem \</span><br><span class="line">    -ca-key=ca/ca-key.pem \</span><br><span class="line">    -config=ca-config.json \</span><br><span class="line">    -hostname=james-blog.com \</span><br><span class="line">    -profile=nginx \</span><br><span class="line">    nginx/nginx-csr.json | cfssljson -bare nginx/nginx</span><br><span class="line">    </span><br><span class="line">2021/02/08 08:03:09 [INFO] generate received request</span><br><span class="line">2021/02/08 08:03:09 [INFO] received CSR</span><br><span class="line">2021/02/08 08:03:09 [INFO] generating key: rsa-2048</span><br><span class="line">2021/02/08 08:03:09 [INFO] encoded CSR</span><br><span class="line">2021/02/08 08:03:09 [INFO] signed certificate with serial number 67599991771298537291786410610924862791459550062</span><br></pre></td></tr></table></figure>
+<p>檢視當前 <code>nginx/</code> 目錄內的檔案，即 <code>nginx-key.pem</code> 為金鑰，<code>nginx.pem</code> 為憑證。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ls nginx/</span><br><span class="line"></span><br><span class="line">nginx.csr  nginx-csr.json  nginx-key.pem  nginx.pem</span><br></pre></td></tr></table></figure>
+<p>接著將 <code>nginx/nginx.pem</code> 與 <code>nginx/nginx-key.pem</code> 內容合成一份名為 <code>tls.pem</code> 檔案以提供 HAProxy 配置使用。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat nginx/nginx.pem &gt; tls.pem</span><br><span class="line">$ cat nginx/nginx-key.pem &gt;&gt; tls.pem</span><br></pre></td></tr></table></figure>
+<p>檢視當前 <code>tls.pem</code> 內容。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">$ cat tls.pem</span><br><span class="line"></span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">MIIEGjCCAwKgAwIBAgIUC9dJ2RtjdZYV/EvQvYWwUrl0M24wDQYJKoZIhvcNAQEL</span><br><span class="line">BQAweDELMAkGA1UEBhMCVFcxDzANBgNVBAgTBlRhaXBlaTEPMA0GA1UEBxMGVGFp</span><br><span class="line">cGVpMRYwFAYDVQQKEw1qYW1lcyBjb21wYW55MRYwFAYDVQQLEw1qYW1lcyBjb21w</span><br><span class="line">YW55MRcwFQYDVQQDEw5qYW1lcy1ibG9nLmNvbTAeFw0yMTAyMDgwNzU4MDBaFw0z</span><br><span class="line">MTAyMDYwNzU4MDBaMHgxCzAJBgNVBAYTAlRXMQ8wDQYDVQQIEwZUYWlwZWkxDzAN</span><br><span class="line">BgNVBAcTBlRhaXBlaTEWMBQGA1UEChMNamFtZXMgY29tcGFueTEWMBQGA1UECxMN</span><br><span class="line">amFtZXMgY29tcGFueTEXMBUGA1UEAxMOamFtZXMtYmxvZy5jb20wggEiMA0GCSqG</span><br><span class="line">SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDxLh+7I7avapikDuiP9JQhHJu4hVlxrcvK</span><br><span class="line">trMcXP9QcqiRkrgJ/Z2kWxM1KRq1TEFpArBCaLBxDpRVDuH3zG5b+gbZSF+uAK1d</span><br><span class="line">WBy7ANFnSjj49/XtD54gU9mu0DUoGgQFU0zfI7RDOKwXbVmL04WBVI1avS88qxVa</span><br><span class="line">jjaKCwvz4ubvIHrDhJRzVIzKrGuC5F7lRoahQTfL6Qu6kD89AgpiunPnAeMaQULU</span><br><span class="line">LKt4ScdPrZsbnd6hlRBt8SsFx6ain/Z9J2FG/J27XwtV78nO409owZ4Is/ZwANQC</span><br><span class="line">oI3BdvEO4i2p5B0f5517FKM8p13ZQ02WbFPHpch47XDUgpJWqQ8BAgMBAAGjgZsw</span><br><span class="line">gZgwDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcD</span><br><span class="line">AjAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBSLQt4fZ6N7eBFxFRfGrb/Yy8sTOjAf</span><br><span class="line">BgNVHSMEGDAWgBTgpE193bdCcTryuM5SoEVqxDpUFDAZBgNVHREEEjAQgg5qYW1l</span><br><span class="line">cy1ibG9nLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEATsIqEmyayWvrfapcEMnzrirr</span><br><span class="line">r1uIPRHlWYjzWx0HRtaxnWzk/mgtDSDUTzAVM7+unQFqy7ZsJoI7zsDuhfidv8WG</span><br><span class="line">3ChdSs773grz5m6GB3Wy8n+P5LNmqp3uKN80e1A0fjccqoKcec29YdMjlCRWj/El</span><br><span class="line">7OF9vOQECROFiGDiXvz9Ou0BsAB79GgTjMRQfwIVTjgVhh9rVR5Q4eDtaUqnOF5e</span><br><span class="line">Wxo8erHBw8wIhfjrSI7Mfa09MWwF4ohC3U1tHnkb44gjdz6wfZ1xFv/7rw6LA1bG</span><br><span class="line">bD5mj2FUKoMKnzL9FkQhoe8H5YBchdB5IUS6MZygmwAgQ4L89dByLes3QJAT6Q==</span><br><span class="line">-----END CERTIFICATE-----</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEowIBAAKCAQEA8S4fuyO2r2qYpA7oj/SUIRybuIVZca3LyrazHFz/UHKokZK4</span><br><span class="line">Cf2dpFsTNSkatUxBaQKwQmiwcQ6UVQ7h98xuW/oG2UhfrgCtXVgcuwDRZ0o4+Pf1</span><br><span class="line">7Q+eIFPZrtA1KBoEBVNM3yO0QzisF21Zi9OFgVSNWr0vPKsVWo42igsL8+Lm7yB6</span><br><span class="line">w4SUc1SMyqxrguRe5UaGoUE3y+kLupA/PQIKYrpz5wHjGkFC1CyreEnHT62bG53e</span><br><span class="line">oZUQbfErBcemop/2fSdhRvydu18LVe/JzuNPaMGeCLP2cADUAqCNwXbxDuItqeQd</span><br><span class="line">H+edexSjPKdd2UNNlmxTx6XIeO1w1IKSVqkPAQIDAQABAoH/QuOH6V7+S6hErTt1</span><br><span class="line">RHeQnZ5Rkdtp8x1AZ/hDtJoWNTmXhsgqQpsUHYEk0pmTzrRXb8hPGhvu02w3t19p</span><br><span class="line">TFBmSxwMyjZIUvndGwZU8YhIi10KcAJVMmoicNTQiqs0EuskMlXn+/rrA7m0AMtT</span><br><span class="line">CnSfkj7g9UmC0FCim3rVpXNq3TiG9H+tFPnOFadTbRJi0CkADgMRrmywliBe/7Dd</span><br><span class="line">B6Xcp/2jxHeoMiqqOcszDgIxG5CoE03mghqqfxalJXzioMexaMyMH4epoYFaKVsI</span><br><span class="line">KfOIo1Fie8JPCtOP0DEi3BOolaFd9Nrj3RwgMIoQQ0ZeOdkJUvZRklOxJHwG3hEQ</span><br><span class="line">8sNRAoGBAPJM9SueSnDqqhofjcRl8a5CKY9y7zwTiXy92VQFhsK21fG8EviEgs50</span><br><span class="line">577EHE4Cb5gxQxsPSK54gxOOZ2ZbP11ynaKbI2ZbPUUgNppiaPc+ERG6xBL4e0/r</span><br><span class="line">VzAqd5kAZZUov5oi2RW6cBtQeONhgdRGN3Fq0an1QCMaJe9TRcRlAoGBAP7Q8vLp</span><br><span class="line">L7rAs8jqllD+Ijx7aDzLMDHD2k2iWatSe6uIXghyqOD7VmSI4goYYqtcipRv53iH</span><br><span class="line">dwWm/c6BtqwHrsOgM12ZiqotDDOUhgJIe29IEdGHG+fJ9rfefAbeV53I8CadL+G/</span><br><span class="line">wtmaMDzq9h6FZmMPT2lzvYj9oeBKQAfqw7BtAoGBAIjD5583Oc2Cp4EXTm4NHN2/</span><br><span class="line">erX9qgu++1vtzT4f4HEHwrsv7YVZRnxCgIytJUzjExpUtAwSFHRmkZX4S2T7HEki</span><br><span class="line">6NdfuhuMZIkgJbH+2kC0R+45/XK3zuLNc+k8D0XNc4k99uiJwv8AvUatpY6y+xVW</span><br><span class="line">jPT31mCYjhtCJydvWXIBAoGBAMC0ECc3xgq7lLsK/WZ+6jFHOotPNkFMVhmD/8Aa</span><br><span class="line">fsA4PrSw0ZpjOPCKvDbaPjRNpdef0TNLbu1tXl//pL/wh3AWBQJyDXWo36NaXQX4</span><br><span class="line">/rAnlqIYRThDejuPG8it+SCwRz1MfluBA8BAZN6M6lgmlkmv2GRtTRb+iJ7wSAA0</span><br><span class="line">wIz5AoGBAJhIzuMCMuUpywBPJr6L4zwWBswhqds/KZX31EcYCFVxL/rtkNQhjy/b</span><br><span class="line">mL+JGNARMbYHadqP/wobwqhY2WI9ZtBb+A+mVKl/kO38q+hwUCigOumo2P3U76SR</span><br><span class="line">9ofrV/klBKDE8Az+D5M0zwWvmosutoIQDpgiif20qlySdX1N9U7g</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<p>最後，編輯 <code>/etc/haproxy/haproxy.cfg</code> 檔案，加入 TLS 配置。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/haproxy/haproxy.cfg</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">global</span><br><span class="line">  ...</span><br><span class="line">  tune.ssl.default-dh-param 2048</span><br><span class="line"></span><br><span class="line">frontend f_nginx</span><br><span class="line">  mode http</span><br><span class="line">  bind *:8443 ssl crt /home/vagrant/tls.pem</span><br><span class="line">  default_backend b_nginx</span><br><span class="line"></span><br><span class="line">backend b_nginx</span><br><span class="line">  server nginx-1 192.168.10.10:80 check</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在 global 加入 <code>tune.ssl.default-dh-param 2048</code> 並在最底部加入上述配置，其原因為 RSA 為長度 2048，預設 HAProxy 為 1024，若無調整則啟動時會產生警告。</p>
+</blockquote>
+<p>重新啟動 HAProxy 服務。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart haproxy</span><br></pre></td></tr></table></figure>
+<p>檢視當前 HAProxy 狀態。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl status haproxy</span><br><span class="line"></span><br><span class="line">● haproxy.service - HAProxy Load Balancer</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/haproxy.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Mon 2021-02-08 08:11:44 UTC; 1s ago</span><br><span class="line">       Docs: man:haproxy(1)</span><br><span class="line">             file:/usr/share/doc/haproxy/configuration.txt.gz</span><br><span class="line">    Process: 15325 ExecStartPre=/usr/sbin/haproxy -f $CONFIG -c -q $EXTRAOPTS (code=exited, status=0/SUCCESS)</span><br><span class="line">   Main PID: 15336 (haproxy)</span><br><span class="line">      Tasks: 2 (limit: 1074)</span><br><span class="line">     Memory: 6.6M</span><br><span class="line">     CGroup: /system.slice/haproxy.service</span><br><span class="line">             ├─15336 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock</span><br><span class="line">             └─15337 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock</span><br><span class="line"></span><br><span class="line">Feb 08 08:11:44 ubuntu systemd[1]: Starting HAProxy Load Balancer...</span><br><span class="line">Feb 08 08:11:44 ubuntu haproxy[15336]: Proxy f_nginx started.</span><br><span class="line">Feb 08 08:11:44 ubuntu haproxy[15336]: Proxy f_nginx started.</span><br><span class="line">Feb 08 08:11:44 ubuntu haproxy[15336]: Proxy b_nginx started.</span><br><span class="line">Feb 08 08:11:44 ubuntu haproxy[15336]: Proxy b_nginx started.</span><br><span class="line">Feb 08 08:11:44 ubuntu haproxy[15336]: [NOTICE] 038/081144 (15336) : New worker #1 (15337) forked</span><br><span class="line">Feb 08 08:11:44 ubuntu systemd[1]: Started HAProxy Load Balancer.</span><br></pre></td></tr></table></figure>
+<h3 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h3><p>我們需要在 <code>/etc/hosts</code> 中加入 <code>192.168.10.10 james-blog.com</code> 讓系統認得這個 Domain。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/hosts</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">192.168.10.10 james-blog.com</span><br></pre></td></tr></table></figure>
+<p>利用 <code>cUrl</code> 指令並帶入憑證進行驗證。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ curl --cacert nginx/nginx.pem https://james-blog.com:8443</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;For online documentation and support please refer to</span><br><span class="line">&lt;a href=&quot;http://nginx.org/&quot;&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;</span><br><span class="line">Commercial support is available at</span><br><span class="line">&lt;a href=&quot;http://nginx.com/&quot;&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>若想要透過瀏覽器進行測試，在 MacOS 系統就需要將憑證加入到”鑰匙圈存取”中，並且開啟”永遠信任”。</p>
+<p><img src="/images/TLS/keynote1.png" alt="keynote1" title="keynote1"></p>
+<p><img src="/images/TLS/keynote2.png" alt="keynote2" title="keynote2"></p>
+<p>若成功，則利用 Chrome 瀏覽器可以看到網址左邊有一個”鎖”的 icon。</p>
+<p><img src="/images/TLS/chrome-snapshot.png" alt="chrome-snapshot" title="chrome-snapshot"></p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><p>因為我們在建立 <code>nginx</code> 服務憑證時，有註明使用的 hostname 為 <code>james-blog.com</code>，因此若使用其他們 domain 會發生錯誤。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ curl --cacert nginx/nginx.pem https://james1-blog.com:8443</span><br><span class="line"></span><br><span class="line">curl: (60) SSL: no alternative certificate subject name matches target host name &apos;james1-blog.com&apos;</span><br><span class="line">More details here: https://curl.haxx.se/docs/sslcerts.html</span><br><span class="line"></span><br><span class="line">curl failed to verify the legitimacy of the server and therefore could not</span><br><span class="line">establish a secure connection to it. To learn more about this situation and</span><br><span class="line">how to fix it, please visit the web page mentioned above.</span><br></pre></td></tr></table></figure>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h2><ul>
+<li><a href="https://www.cnblogs.com/LangXian/p/11282986.html" target="_blank" rel="noopener">https://www.cnblogs.com/LangXian/p/11282986.html</a></li>
+</ul>
+
         </div>
         
-        
-        <div class="level is-mobile">
+        <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/12/13/Vitess-介紹/#more">繼續閱讀</a>
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/TLS/">TLS</a>
                 </div>
             </div>
         </div>
+        
         
         
     </div>
@@ -202,9 +277,45 @@
 
 
 
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/02/07/Kubernetes-CoreDNS/">
+                <span class="level-item">Kubernetes CoreDNS 解析 Domain</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
 
 
 
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2021/02/08/PKI-驗證解析/';
+        this.page.identifier = '2021/02/08/PKI-驗證解析/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
 </div>
                 
 
@@ -950,7 +1061,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="HTTPS 驗證解析" height="28">
                 
                 </a>
                 <p class="is-size-7">
