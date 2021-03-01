@@ -7,17 +7,22 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>彙整: 2019/3 - James&#39;s Blog</title>
+<title>利用 Golang 在 Linux 取得檔案建立時間 - James&#39;s Blog</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="James&#39;s Blog">
-<meta property="og:url" content="http://ci-jie.github.io/archives/2019/03/index.html">
+    <meta name="description" content="前一陣子利用 NFS 來將使用者上傳上來的檔案儲存在伺服器端的檔案目錄中，但是當使用者想要檢視當前已經上傳上來的檔案並且查看檔案建立的時間時，卻發現無法取得檔案建立時間。雖然可以在設計上稍做調整，例如當檔案上傳上來時，將當前時間紀錄並儲存起來，待後續檢視使用。不過這樣的方法雖然可行，但是缺點就是需要額外成本來維護所儲存的檔案建立時間。因此本篇筆者就希望利用 Linux 檔案系統所儲存的建立時間來提">
+<meta name="keywords" content="Golang,Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 Golang 在 Linux 取得檔案建立時間">
+<meta property="og:url" content="http://ci-jie.github.io/2021/03/01/在-Linux-取得檔案建立時間/index.html">
 <meta property="og:site_name" content="James&#39;s Blog">
+<meta property="og:description" content="前一陣子利用 NFS 來將使用者上傳上來的檔案儲存在伺服器端的檔案目錄中，但是當使用者想要檢視當前已經上傳上來的檔案並且查看檔案建立的時間時，卻發現無法取得檔案建立時間。雖然可以在設計上稍做調整，例如當檔案上傳上來時，將當前時間紀錄並儲存起來，待後續檢視使用。不過這樣的方法雖然可行，但是缺點就是需要額外成本來維護所儲存的檔案建立時間。因此本篇筆者就希望利用 Linux 檔案系統所儲存的建立時間來提">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2021-03-01T07:11:12.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="James&#39;s Blog">
+<meta name="twitter:title" content="利用 Golang 在 Linux 取得檔案建立時間">
+<meta name="twitter:description" content="前一陣子利用 NFS 來將使用者上傳上來的檔案儲存在伺服器端的檔案目錄中，但是當使用者想要檢視當前已經上傳上來的檔案並且查看檔案建立的時間時，卻發現無法取得檔案建立時間。雖然可以在設計上稍做調整，例如當檔案上傳上來時，將當前時間紀錄並儲存起來，待後續檢視使用。不過這樣的方法雖然可行，但是缺點就是需要額外成本來維護所儲存的檔案建立時間。因此本篇筆者就希望利用 Linux 檔案系統所儲存的建立時間來提">
 <meta name="twitter:image" content="http://ci-jie.github.io/images/og_image.png">
 
 
@@ -92,7 +97,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                <img src="/images/cijie.png" alt="利用 Golang 在 Linux 取得檔案建立時間" height="28">
             
             </a>
         </div>
@@ -142,39 +147,134 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="tag is-link">
-        三月 2019
-        </h3>
-        <div class="timeline">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
         
-            <article class="media">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-03-01T06:07:00.000Z">2021-03-01</time>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-03-25T02:10:00.000Z">2019-03-25</time>
-                        <a href="/2019/03/25/Ceph-Object-Storage-Elasticsearch-實作快速搜尋-metadata/" class="title has-link-black-ter is-size-6 has-text-weight-normal">透過 Elasticsearch 提供 Ceph RGW Metadata 搜尋</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Ceph/">Ceph</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Golang/">Golang</a>
                 </div>
-            </article>
-        
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分鐘 閱讀文 (大約 1667 個字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                利用 Golang 在 Linux 取得檔案建立時間
+            
+        </h1>
+        <div class="content">
+            <p>前一陣子利用 NFS 來將使用者上傳上來的檔案儲存在伺服器端的檔案目錄中，但是當使用者想要檢視當前已經上傳上來的檔案並且查看檔案建立的時間時，卻發現無法取得檔案建立時間。雖然可以在設計上稍做調整，例如當檔案上傳上來時，將當前時間紀錄並儲存起來，待後續檢視使用。不過這樣的方法雖然可行，但是缺點就是需要額外成本來維護所儲存的檔案建立時間。因此本篇筆者就希望利用 Linux 檔案系統所儲存的建立時間來提供檢視檔案使用。</p>
+<a id="more"></a>
+<h2 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h2><p>在 Golang 裡面使用 <code>os.Stat(&lt;file-path&gt;).Sys().(*syscall.Stat_t)</code> 方法可以發現結果如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;&#123;Dev:64768 Ino:2883742 Nlink:1 Mode:33188 Uid:0 Gid:0 X__pad0:0 Rdev:0 Size:1022 Blksize:4096 Blocks:8 Atim:&#123;Sec:1614580284 Nsec:716859675&#125; Mtim:&#123;Sec:1614580275 Nsec:628859301&#125; Ctim:&#123;Sec:1614580275 Nsec:628859301&#125; X__unused:[0 0 0]&#125;</span><br></pre></td></tr></table></figure>
+<p>由上述可以所示僅提供 Atim(Access Time), Mtim(Modify Time) 與 Ctim(Change Time)，不建立時間。</p>
+<p>另外也可以從 Linux <code>stat</code> 指令查看，結果如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  File: main.go</span><br><span class="line">  Size: 1022      	Blocks: 8          IO Block: 4096   regular file</span><br><span class="line">Device: fd00h/64768d	Inode: 2883742     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2021-03-01 06:31:24.716859675 +0000</span><br><span class="line">Modify: 2021-03-01 06:31:15.628859301 +0000</span><br><span class="line">Change: 2021-03-01 06:31:15.628859301 +0000</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure>
+<p>由上述發現輸出結果也僅包含 Access, Modify 與 Change 三種，而 Birth 就是我們想要取得的建立時間。</p>
+<h2 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h2><p>在經過筆者一番研究後發現在 Linux 4.11 版本後支援 statx() 方法，參考文件<a href="https://man7.org/linux/man-pages/man2/statx.2.html" target="_blank" rel="noopener">點擊</a>。statx() 方法可以提供呼叫者檔案建立時間，但當前僅可以透過 C 語言進行呼叫，因此我們就需要透過 Golang 呼叫 C 語言，讓 C 語言代替我們去呼叫 statx() 方法，並將結果打包後轉成 Golang 看得懂的語法再將結果輸出。</p>
+<p>接下來我們就依序介紹整個程式設計的流程。</p>
+<h2 id="步驟"><a href="#步驟" class="headerlink" title="步驟"></a>步驟</h2><p>首先我們要先確保當前 linux kernel 版本。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ uname -a</span><br><span class="line"></span><br><span class="line">Linux coredns 5.11.0-051100-generic #202102142330 SMP Sun Feb 14 23:33:21 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
+<p>當前環境已經升級到最新的 Linux Kernel 版本，若讀者尚未更新可以參考這篇文件<a href="https://sypalo.com/how-to-upgrade-ubuntu" target="_blank" rel="noopener">點擊</a></p>
+<p>升級完成後，就可以開始開發。首先建立一個專案，並且建立 <code>go.mod</code>。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir file-birthtime</span><br><span class="line">$ cd file-birthtime</span><br><span class="line">$ go mod init file-birthtime</span><br></pre></td></tr></table></figure>
+<p>建立 <code>statx.h</code> 檔案，定義方法的結構，其內容如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">$ vim statx.h</span><br><span class="line"></span><br><span class="line">#ifndef _STATX_H</span><br><span class="line">#define _STATX_H</span><br><span class="line"></span><br><span class="line">#include &lt;asm-generic/statfs.h&gt;</span><br><span class="line"></span><br><span class="line">/* from kernel-sources include/uapi/linux/stat.h */</span><br><span class="line">#define STATX_TYPE 0x00000001U        /* Want/got stx_mode &amp; S_IFMT */</span><br><span class="line">#define STATX_MODE 0x00000002U        /* Want/got stx_mode &amp; ~S_IFMT */</span><br><span class="line">#define STATX_NLINK 0x00000004U       /* Want/got stx_nlink */</span><br><span class="line">#define STATX_UID 0x00000008U         /* Want/got stx_uid */</span><br><span class="line">#define STATX_GID 0x00000010U         /* Want/got stx_gid */</span><br><span class="line">#define STATX_ATIME 0x00000020U       /* Want/got stx_atime */</span><br><span class="line">#define STATX_MTIME 0x00000040U       /* Want/got stx_mtime */</span><br><span class="line">#define STATX_CTIME 0x00000080U       /* Want/got stx_ctime */</span><br><span class="line">#define STATX_INO 0x00000100U         /* Want/got stx_ino */</span><br><span class="line">#define STATX_SIZE 0x00000200U        /* Want/got stx_size */</span><br><span class="line">#define STATX_BLOCKS 0x00000400U      /* Want/got stx_blocks */</span><br><span class="line">#define STATX_BASIC_STATS 0x000007ffU /* The stuff in the normal stat struct */</span><br><span class="line">#define STATX_BTIME 0x00000800U       /* Want/got stx_btime */</span><br><span class="line">#define STATX_ALL 0x00000fffU         /* All currently supported flags */</span><br><span class="line">#define STATX__RESERVED 0x80000000U   /* Reserved for future struct statx expansion */</span><br><span class="line"></span><br><span class="line">struct statx_timestamp</span><br><span class="line">&#123;</span><br><span class="line">    __s64 tv_sec;</span><br><span class="line">    __u32 tv_nsec;</span><br><span class="line">    __s32 __reserved;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct statx</span><br><span class="line">&#123;</span><br><span class="line">    /* 0x00 */</span><br><span class="line">    __u32 stx_mask;       /* What results were written [uncond] */</span><br><span class="line">    __u32 stx_blksize;    /* Preferred general I/O size [uncond] */</span><br><span class="line">    __u64 stx_attributes; /* Flags conveying information about the file [uncond] */</span><br><span class="line">    /* 0x10 */</span><br><span class="line">    __u32 stx_nlink; /* Number of hard links */</span><br><span class="line">    __u32 stx_uid;   /* User ID of owner */</span><br><span class="line">    __u32 stx_gid;   /* Group ID of owner */</span><br><span class="line">    __u16 stx_mode;  /* File mode */</span><br><span class="line">    __u16 __spare0[1];</span><br><span class="line">    /* 0x20 */</span><br><span class="line">    __u64 stx_ino;             /* Inode number */</span><br><span class="line">    __u64 stx_size;            /* File size */</span><br><span class="line">    __u64 stx_blocks;          /* Number of 512-byte blocks allocated */</span><br><span class="line">    __u64 stx_attributes_mask; /* Mask to show what&apos;s supported in stx_attributes */</span><br><span class="line">    /* 0x40 */</span><br><span class="line">    struct statx_timestamp stx_atime; /* Last access time */</span><br><span class="line">    struct statx_timestamp stx_btime; /* File creation time */</span><br><span class="line">    struct statx_timestamp stx_ctime; /* Last attribute change time */</span><br><span class="line">    struct statx_timestamp stx_mtime; /* Last data modification time */</span><br><span class="line">    /* 0x80 */</span><br><span class="line">    __u32 stx_rdev_major; /* Device ID of special file [if bdev/cdev] */</span><br><span class="line">    __u32 stx_rdev_minor;</span><br><span class="line">    __u32 stx_dev_major; /* ID of device containing file [uncond] */</span><br><span class="line">    __u32 stx_dev_minor;</span><br><span class="line">    /* 0x90 */</span><br><span class="line">    __u64 __spare2[14]; /* Spare space for future expansion */</span><br><span class="line">                        /* 0x100 */</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* from kernel sources: include/uapi/linux/stat.h */</span><br><span class="line">#define AT_STATX_SYNC_TYPE 0x6000    /* Type of synchronisation required from statx() */</span><br><span class="line">#define AT_STATX_SYNC_AS_STAT 0x0000 /* - Do whatever stat() does */</span><br><span class="line">#define AT_STATX_FORCE_SYNC 0x2000   /* - Force the attributes to be sync&apos;d with the server */</span><br><span class="line">#define AT_STATX_DONT_SYNC 0x4000    /* - Don&apos;t sync attributes with the server */</span><br><span class="line"></span><br><span class="line">int date(const char *path, char *out);</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>上述 <code>int date(const char *path, char *out);</code> 方法，定義檔案路徑(path)與輸出的記憶體空間(out) 兩個參數。</p>
+<p>建立 <code>statx.c</code> 檔案，定義方法的邏輯，其內容如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">$ vim statx.c</span><br><span class="line"></span><br><span class="line">#define _GNU_SOURCE</span><br><span class="line">#define _ATFILE_SOURCE</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &quot;statx.h&quot;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line">#include &lt;getopt.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">#define VERSION 1.0.1</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">   does not (yet) provide a wrapper for the statx() system call </span><br><span class="line">*/</span><br><span class="line">#include &lt;sys/syscall.h&gt;</span><br><span class="line"></span><br><span class="line">/* this code works ony with x86, arm64 and x86_64 */</span><br><span class="line">#if __x86_64__</span><br><span class="line">#define __NR_statx 332</span><br><span class="line">#else</span><br><span class="line">#if __aarch64__</span><br><span class="line">#define __NR_statx 291</span><br><span class="line">#else</span><br><span class="line">#define __NR_statx 383</span><br><span class="line">#endif</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#define statx(a, b, c, d, e) syscall(__NR_statx, (a), (b), (c), (d), (e))</span><br><span class="line"></span><br><span class="line">int date(const char *path, char *out)</span><br><span class="line">&#123;</span><br><span class="line">    struct tm tm;</span><br><span class="line">    time_t tim;</span><br><span class="line">    char buffer[100];</span><br><span class="line">    int len;</span><br><span class="line">    struct statx stxbuf;</span><br><span class="line">    int dirfd = AT_FDCWD;</span><br><span class="line">    int flags = AT_SYMLINK_NOFOLLOW;</span><br><span class="line">    unsigned int mask = STATX_ALL;</span><br><span class="line">    int n = 0;</span><br><span class="line"></span><br><span class="line">    memset(&amp;stxbuf, 0xbf, sizeof(stxbuf));</span><br><span class="line">    statx(dirfd, path, flags, mask, &amp;stxbuf);</span><br><span class="line"></span><br><span class="line">    tim = stxbuf.stx_btime.tv_sec;</span><br><span class="line">    if (!localtime_r(&amp;tim, &amp;tm))</span><br><span class="line">    &#123;</span><br><span class="line">        perror(&quot;localtime_r&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    len = strftime(buffer, 100, &quot;%F %T&quot;, &amp;tm);</span><br><span class="line">    if (len == 0)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(&quot;strftime&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    n = sprintf(out, &quot;%s.%09u&quot;, buffer, stxbuf.stx_btime.tv_nsec);</span><br><span class="line">    return n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述定義 <code>date</code> 方法的邏輯，主要呼叫 statx() 並且從輸出結構中取得 btime (Birth Time) 作為輸出。</p>
+<p>最後，建立 <code>main.go</code> 利用 Golang 呼叫 C 語言定義的 <code>date</code> 方法取得輸出結果，並根據需求進行時間格式轉換，內容如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ vim main.go</span><br><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;unsafe&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// #cgo CFLAGS: -g -Wall</span><br><span class="line">// #include &lt;stdlib.h&gt;</span><br><span class="line">// #include &quot;statx.h&quot;</span><br><span class="line">import &quot;C&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	layout = &quot;2006-01-02 15:04:05.000000000&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	fmt.Println(getCreatedTime(os.Args[1]))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func getCreatedTime(path string) (createdTime time.Time, err error) &#123;</span><br><span class="line">	ppath := C.CString(path)</span><br><span class="line">	defer C.free(unsafe.Pointer(ppath))</span><br><span class="line"></span><br><span class="line">	date := C.malloc(C.sizeof_char * 1024)</span><br><span class="line">	defer C.free(unsafe.Pointer(date))</span><br><span class="line"></span><br><span class="line">	size := C.date(ppath, (*C.char)(date))</span><br><span class="line">	createTime := string(C.GoBytes(date, size))</span><br><span class="line">	t, err := time.Parse(layout, createTime)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return t, err</span><br><span class="line">	&#125;</span><br><span class="line">	return t, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h2><p>在執行前需先利用 <code>go build</code> 將 Golang 專案編譯成執行檔。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ go build</span><br></pre></td></tr></table></figure>
+<p>編譯完成後，運行執行檔並且帶入檔案位址。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./file-birthtime main.go</span><br><span class="line"></span><br><span class="line">2021-03-01 06:05:36.450173642 +0000 UTC &lt;nil&gt;</span><br></pre></td></tr></table></figure>
+<p>上述可以查看當前目錄中 <code>main.go</code> 檔案所建立的時間。</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>上述方法需要利用 C 語言呼叫 Linux statx() 方法取得檔案建立時間，再透過自己善用的語言與 C 語言進行溝通進而取得檔案建立時間。當然方法並非唯一，筆者希望將自己研究的方法透過文章方式跟大家分享，提供遇到相同問題的讀者一個可以解決問題的方法。</p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h2><ul>
+<li><a href="https://github.com/whotwagner/statx-fun" target="_blank" rel="noopener">https://github.com/whotwagner/statx-fun</a></li>
+<li><a href="https://man7.org/linux/man-pages/man2/statx.2.html" target="_blank" rel="noopener">https://man7.org/linux/man-pages/man2/statx.2.html</a></li>
+</ul>
+<p>若針對本篇教學有任何疑問或有敘述錯誤的地方，歡迎在底下留言討論唷～</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Golang/">Golang</a>, <a class="has-link-grey -link" href="/tags/Linux/">Linux</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
 </div>
 
 
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/02/08/從-Source-Codes-開始打造-HA-Kubernetes-Cluster/">
+                <span class="level-item">從 Source Codes 開始打造 HA Kubernetes Cluster</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://ci-jie.github.io/2021/03/01/在-Linux-取得檔案建立時間/';
+        this.page.identifier = '2021/03/01/在-Linux-取得檔案建立時間/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'cijie-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
 </div>
                 
 
@@ -978,7 +1078,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/cijie.png" alt="James&#39;s Blog" height="28">
+                    <img src="/images/cijie.png" alt="利用 Golang 在 Linux 取得檔案建立時間" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -19,7 +19,7 @@
 <meta property="og:description" content="在網路上可以找到大量使用 kubeadm 等類似工具建置 Kubernetes Cluster 的教學，雖然使用這類工具可以快速建立一個 Kubernetes Cluster ，甚至連 HA 也考量進去了。但以手動方式建置好處莫過於可以了解每個元件之間的關係與建置過程可能會遇到的問題以及從中學習排除問題的經驗。因此筆者就開始了這條不歸路….本篇主要紀錄建置一個 HA Kubernetes Clus">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://ci-jie.github.io/images/og_image.png">
-<meta property="og:updated_time" content="2021-02-21T08:50:50.913Z">
+<meta property="og:updated_time" content="2021-02-21T15:44:29.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="從 Source Codes 開始打造 HA Kubernetes Cluster">
 <meta name="twitter:description" content="在網路上可以找到大量使用 kubeadm 等類似工具建置 Kubernetes Cluster 的教學，雖然使用這類工具可以快速建立一個 Kubernetes Cluster ，甚至連 HA 也考量進去了。但以手動方式建置好處莫過於可以了解每個元件之間的關係與建置過程可能會遇到的問題以及從中學習排除問題的經驗。因此筆者就開始了這條不歸路….本篇主要紀錄建置一個 HA Kubernetes Clus">
@@ -159,7 +159,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 小時 閱讀文 (大約 17474 個字)
+                    2 小時 閱讀文 (大約 17466 個字)
                 </span>
                 
                 
@@ -407,7 +407,7 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ openssl genrsa -out $&#123;PKI_DIR&#125;/sa.key 2048</span><br><span class="line"></span><br><span class="line">Generating RSA private key, 2048 bit long modulus (2 primes)</span><br><span class="line">........................................................+++++</span><br><span class="line">..................+++++</span><br><span class="line">e is 65537 (0x010001)</span><br><span class="line"></span><br><span class="line">$ openssl rsa -in $&#123;PKI_DIR&#125;/sa.key -pubout -out $&#123;PKI_DIR&#125;/sa.pub</span><br><span class="line"></span><br><span class="line">writing RSA key</span><br><span class="line"></span><br><span class="line">$ ls $&#123;PKI_DIR&#125;/sa.*</span><br><span class="line"></span><br><span class="line">/etc/kubernetes/pki/sa.key  /etc/kubernetes/pki/sa.pub</span><br></pre></td></tr></table></figure>
 <p>將 keys 從 <code>k8s-m1</code> 複製到 <code>k8s-m2</code> 與 <code>k8s-m3</code>。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ scp $&#123;PKI_DIR&#125;/sa.key $&#123;PKI_DIR&#125;/sa.pub k8s-m2:$&#123;PKI_DIR&#125;/</span><br><span class="line">$ scp $&#123;PKI_DIR&#125;/sa.key $&#123;PKI_DIR&#125;/sa.pub k8s-m3:$&#123;PKI_DIR&#125;/</span><br></pre></td></tr></table></figure>
-<p>將 kubeconfig 從 <code>k8s-m1</code> 複製到 <code>k8s-m2</code> 與 <code>k8s-m3</code>。<code></code></p>
+<p>將 kubeconfig 從 <code>k8s-m1</code> 複製到 <code>k8s-m2</code> 與 <code>k8s-m3</code>。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ scp $&#123;K8S_DIR&#125;/admin.conf $&#123;K8S_DIR&#125;/controller-manager.conf $&#123;K8S_DIR&#125;/scheduler.conf k8s-m2:$&#123;K8S_DIR&#125;/</span><br><span class="line">$ scp $&#123;K8S_DIR&#125;/admin.conf $&#123;K8S_DIR&#125;/controller-manager.conf $&#123;K8S_DIR&#125;/scheduler.conf k8s-m3:$&#123;K8S_DIR&#125;/</span><br></pre></td></tr></table></figure>
 <h2 id="HAProxy"><a href="#HAProxy" class="headerlink" title="HAProxy"></a>HAProxy</h2><p>HAProxy 主要的目的在於 Kubernetes Cluster 具備 <code>k8s-m1</code>, <code>k8s-m2</code> 與 <code>k8s-m3</code> 三個 Master，並且上面運行 API Server，我們希望可以透過 VIP 方式將 Request 平均分配到每個 API Server 上，因此藉由 HAProxy 達到 Load Balance 效果。</p>
 <p><strong>注意：在 k8s-m1, k8s-m2 與 k8s-m3 皆需安裝與啟動服務</strong></p>
@@ -432,11 +432,11 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt install -y keepalived</span><br></pre></td></tr></table></figure>
 <p>安裝完成後，可以檢視當前 Keepalived 安裝版本。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ apt info keepalived -a</span><br><span class="line"></span><br><span class="line">Package: keepalived</span><br><span class="line">Version: 1:2.0.19-2</span><br><span class="line">Priority: optional</span><br><span class="line">Section: admin</span><br><span class="line">Origin: Ubuntu</span><br><span class="line">Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;</span><br><span class="line">Original-Maintainer: Alexander Wirt &lt;formorer@debian.org&gt;</span><br><span class="line">Bugs: https://bugs.launchpad.net/ubuntu/+filebug</span><br><span class="line">Installed-Size: 1,249 kB</span><br><span class="line">Pre-Depends: init-system-helpers (&gt;= 1.54~)</span><br><span class="line">Depends: iproute2, libc6 (&gt;= 2.28), libglib2.0-0 (&gt;= 2.26.0), libmnl0 (&gt;= 1.0.3-4~), libnftnl11 (&gt;= 1.1.2), libnl-3-200 (&gt;= 3.2.27), libnl-genl-3-200 (&gt;= 3.2.7), libpcre2-8-0 (&gt;= 10.22), libsnmp35 (&gt;= 5.8+dfsg), libssl1.1 (&gt;= 1.1.0)</span><br><span class="line">Recommends: ipvsadm</span><br><span class="line">Homepage: http://keepalived.org</span><br><span class="line">Download-Size: 360 kB</span><br><span class="line">APT-Manual-Installed: yes</span><br><span class="line">APT-Sources: http://archive.ubuntu.com/ubuntu focal/main amd64 Packages</span><br><span class="line">Description: Failover and monitoring daemon for LVS clusters</span><br><span class="line"> keepalived is used for monitoring real servers within a Linux</span><br><span class="line"> Virtual Server (LVS) cluster.  keepalived can be configured to</span><br><span class="line"> remove real servers from the cluster pool if it stops responding,</span><br><span class="line"> as well as send a notification email to make the admin aware of</span><br><span class="line"> the service failure.</span><br><span class="line"> .</span><br><span class="line"> In addition, keepalived implements an independent Virtual Router</span><br><span class="line"> Redundancy Protocol (VRRPv2; see rfc2338 for additional info)</span><br><span class="line"> framework for director failover.</span><br><span class="line"> .</span><br><span class="line"> You need a kernel &gt;= 2.4.28 or &gt;= 2.6.11 for keepalived.</span><br><span class="line"> See README.Debian for more information.</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m1</code> 配置 /etc/keepalived/keepalived.conf` 檔案。</p>
+<p>在 <code>k8s-m1</code> 配置 <code>/etc/keepalived/keepalived.conf</code> 檔案。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/keepalived/keepalived.conf</span><br><span class="line"></span><br><span class="line">vrrp_instance V1 &#123;</span><br><span class="line">   state MASTER</span><br><span class="line">   interface eth1</span><br><span class="line">   virtual_router_id 61</span><br><span class="line">   priority 102</span><br><span class="line">   advert_int 1</span><br><span class="line">   authentication &#123;</span><br><span class="line">       auth_type PASS</span><br><span class="line">       auth_pass 123456</span><br><span class="line">   &#125;</span><br><span class="line">   virtual_ipaddress &#123;</span><br><span class="line">       192.168.20.20</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m2</code> 配置 /etc/keepalived/keepalived.conf` 檔案。</p>
+<p>在 <code>k8s-m2</code> 配置 <code>/etc/keepalived/keepalived.conf</code> 檔案。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/keepalived/keepalived.conf</span><br><span class="line"></span><br><span class="line">vrrp_instance V1 &#123;</span><br><span class="line">   state BACKUP</span><br><span class="line">   interface eth1</span><br><span class="line">   virtual_router_id 61</span><br><span class="line">   priority 101</span><br><span class="line">   advert_int 1</span><br><span class="line">   authentication &#123;</span><br><span class="line">       auth_type PASS</span><br><span class="line">       auth_pass 123456</span><br><span class="line">   &#125;</span><br><span class="line">   virtual_ipaddress &#123;</span><br><span class="line">       192.168.20.20</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m3</code> 配置 /etc/keepalived/keepalived.conf` 檔案。</p>
+<p>在 <code>k8s-m3</code> 配置 <code>/etc/keepalived/keepalived.conf</code> 檔案。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/keepalived/keepalived.conf</span><br><span class="line"></span><br><span class="line">vrrp_instance V1 &#123;</span><br><span class="line">   state BACKUP</span><br><span class="line">   interface eth1</span><br><span class="line">   virtual_router_id 61</span><br><span class="line">   priority 100</span><br><span class="line">   advert_int 1</span><br><span class="line">   authentication &#123;</span><br><span class="line">       auth_type PASS</span><br><span class="line">       auth_pass 123456</span><br><span class="line">   &#125;</span><br><span class="line">   virtual_ipaddress &#123;</span><br><span class="line">       192.168.20.20</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>在配置前使用者需自行修改 Interface。</p>
@@ -457,7 +457,8 @@
 <blockquote>
 <p>這邊選擇使用 <code>v3.3.8</code> 版本，若使用較新版本在後續配置上會略有不同，讀者可以斟酌使用。</p>
 </blockquote>
-<p>解壓縮 <code>etcd-v3.3.8-linux-amd64.tar.gz</code> 檔案。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar -xvf etcd-v3.3.8-linux-amd64.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>解壓縮 <code>etcd-v3.3.8-linux-amd64.tar.gz</code> 檔案。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar -xvf etcd-v3.3.8-linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
 <p>進入 <code>etcd-v3.3.8-linux-amd64</code> 目錄，並將 <code>etcd</code> 與 <code>etcdctl</code> 檔案複製到 <code>/usr/local/bin/</code> 目錄。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp etcd-v3.3.8-linux-amd64/etcd etcd-v3.3.8-linux-amd64/etcdctl /usr/local/bin/</span><br></pre></td></tr></table></figure>
 <p>建立 <code>/etc/systemd/system/etcd.service</code> 啟動檔案。</p>
@@ -517,7 +518,7 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/systemd/system/scheduler.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=k8s Scheduler Server</span><br><span class="line">Documentation=https://github.com/coreos/etcd</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=root</span><br><span class="line">ExecStart=kube-scheduler \</span><br><span class="line">      --v=0 \</span><br><span class="line">      --logtostderr=true \</span><br><span class="line">      --address=127.0.0.1 \</span><br><span class="line">      --leader-elect=true \</span><br><span class="line">      --kubeconfig=/etc/kubernetes/scheduler.conf</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=10</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m1</code> 啟動 Kubernetes Scheduler。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable scheduler</span><br><span class="line">$ systemctl start scheduler</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m</code> 檢視 Kubernetes Scheduler 狀態。</p>
+<p>在 <code>k8s-m1</code> 檢視 Kubernetes Scheduler 狀態。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl status scheduler</span><br><span class="line"></span><br><span class="line">● scheduler.service - k8s Scheduler Server</span><br><span class="line">     Loaded: loaded (/etc/systemd/system/scheduler.service; disabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Thu 2021-02-04 07:55:58 UTC; 6s ago</span><br><span class="line">       Docs: https://github.com/coreos/etcd</span><br><span class="line">   Main PID: 42594 (kube-scheduler)</span><br><span class="line">      Tasks: 6 (limit: 2281)</span><br><span class="line">     Memory: 12.7M</span><br><span class="line">     CGroup: /system.slice/scheduler.service</span><br><span class="line">             └─42594 /usr/local/bin/kube-scheduler --v=0 --logtostderr=true --address=127.0.0.1 --leader-elect=true --kubeconfig=/etc/kubernetes/scheduler.conf</span><br><span class="line"></span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: W0204 07:55:59.367754   42594 authorization.go:156] No authorization-kubeconfig provided, so SubjectAccessReview of authorization tokens won&apos;t work.</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.378086   42594 registry.go:173] Registering SelectorSpread plugin</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.378268   42594 registry.go:173] Registering SelectorSpread plugin</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: W0204 07:55:59.379735   42594 authorization.go:47] Authorization is disabled</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: W0204 07:55:59.379837   42594 authentication.go:40] Authentication is disabled</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.379924   42594 deprecated_insecure_serving.go:51] Serving healthz insecurely on 127.0.0.1:10251</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.381294   42594 secure_serving.go:197] Serving securely on [::]:10259</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.382191   42594 tlsconfig.go:240] Starting DynamicServingCertificateController</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.482170   42594 leaderelection.go:243] attempting to acquire leader lease  kube-system/kube-scheduler...</span><br><span class="line">Feb 04 07:55:59 k8s-m1 kube-scheduler[42594]: I0204 07:55:59.502458   42594 leaderelection.go:253] successfully acquired lease kube-system/kube-scheduler</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m2</code> 建立 <code>/etc/systemd/system/scheduler.service</code> 檔案。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/systemd/system/scheduler.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=k8s Scheduler Server</span><br><span class="line">Documentation=https://github.com/coreos/etcd</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=root</span><br><span class="line">ExecStart=kube-scheduler \</span><br><span class="line">      --v=0 \</span><br><span class="line">      --logtostderr=true \</span><br><span class="line">      --address=127.0.0.1 \</span><br><span class="line">      --leader-elect=true \</span><br><span class="line">      --kubeconfig=/etc/kubernetes/scheduler.conf</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=10</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
@@ -583,7 +584,7 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ swapoff -a &amp;&amp; sysctl -w vm.swappiness=0</span><br><span class="line"></span><br><span class="line">vm.swappiness = 0</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m2</code> 建立 <code>/etc/kubernetes/manifests</code> 與 <code>/etc/cni/net.d</code> 目錄。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/kubernetes/manifests</span><br><span class="line">$ mkdir -p /etc/cni/net.d</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m2</code> 在 <code>k8s-m2</code> 啟動 Kubelet。</p>
+<p>在 <code>k8s-m2</code> 啟動 Kubelet。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl enable kubelet</span><br><span class="line">$ systemctl start kubelet</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m2</code> 檢視 kubelet 狀態。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl status kubelet</span><br><span class="line"></span><br><span class="line">● kubelet.service - kubelet: The Kubernetes Node Agent</span><br><span class="line">     Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: enabled)</span><br><span class="line">    Drop-In: /etc/systemd/system/kubelet.service.d</span><br><span class="line">             └─10-kubelet.conf</span><br><span class="line">     Active: active (running) since Thu 2021-02-04 09:17:25 UTC; 12s ago</span><br><span class="line">       Docs: http://kubernetes.io/docs/</span><br><span class="line">   Main PID: 15174 (kubelet)</span><br><span class="line">      Tasks: 12 (limit: 2281)</span><br><span class="line">     Memory: 59.3M</span><br><span class="line">     CGroup: /system.slice/kubelet.service</span><br><span class="line">             └─15174 /usr/local/bin/kubelet --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yml --ne&gt;</span><br><span class="line"></span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: W0204 09:17:32.855035   15174 manager.go:596] Failed to retrieve checkpoint for &quot;kubelet&gt;</span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: I0204 09:17:32.855374   15174 plugin_manager.go:114] Starting Kubelet Plugin Manager</span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: I0204 09:17:32.940663   15174 kuberuntime_manager.go:992] updating runtime config throug&gt;</span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: I0204 09:17:32.941087   15174 docker_service.go:357] docker cri received runtime config &gt;</span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: I0204 09:17:32.941285   15174 kubelet_network.go:77] Setting Pod CIDR:  -&gt; 10.244.1.0/24</span><br><span class="line">Feb 04 09:17:32 k8s-m2 kubelet[15174]: E0204 09:17:32.948136   15174 kubelet.go:2106] Container runtime network not ready: Netw&gt;</span><br><span class="line">Feb 04 09:17:33 k8s-m2 kubelet[15174]: I0204 09:17:33.131375   15174 reconciler.go:157] Reconciler: start to sync state</span><br><span class="line">Feb 04 09:17:36 k8s-m2 kubelet[15174]: I0204 09:17:36.174186   15174 transport.go:132] certificate rotation detected, shutting &gt;</span><br><span class="line">Feb 04 09:17:36 k8s-m2 kubelet[15174]: W0204 09:17:36.282619   15174 cni.go:239] Unable to update cni config: no networks found&gt;</span><br><span class="line">Feb 04 09:17:37 k8s-m2 kubelet[15174]: E0204 09:17:37.863015   15174 kubelet.go:2106] Container runtime network not ready: Netw&gt;</span><br></pre></td></tr></table></figure>
@@ -593,7 +594,7 @@
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/systemd/system/kubelet.service.d/</span><br><span class="line">$ vim /etc/systemd/system/kubelet.service.d/10-kubelet.conf</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Environment=&quot;KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf&quot;</span><br><span class="line">Environment=&quot;KUBELET_SYSTEM_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin&quot;</span><br><span class="line">Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yml&quot;</span><br><span class="line">Environment=&quot;KUBELET_EXTRA_ARGS=--node-labels=kubelet.kubernetes.io/master=master&quot;</span><br><span class="line">ExecStart=</span><br><span class="line">ExecStart=/usr/local/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_SYSTEM_ARGS $KUBELET_EXTRA_ARGS</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m3</code> 建立 <code>/var/lib/kubelet/config.yml</code> 檔案。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/lib/kubelet/</span><br><span class="line">$ vim /var/lib/kubelet/config.yml</span><br><span class="line"></span><br><span class="line">apiVersion: kubelet.config.k8s.io/v1beta1</span><br><span class="line">kind: KubeletConfiguration</span><br><span class="line">address: 0.0.0.0</span><br><span class="line">port: 10250</span><br><span class="line">readOnlyPort: 10255</span><br><span class="line">authentication:</span><br><span class="line">  anonymous:</span><br><span class="line">    enabled: false</span><br><span class="line">  webhook:</span><br><span class="line">    cacheTTL: 2m0s</span><br><span class="line">    enabled: true</span><br><span class="line">  x509:</span><br><span class="line">    clientCAFile: /etc/kubernetes/pki/ca.pem</span><br><span class="line">authorization:</span><br><span class="line">  mode: Webhook</span><br><span class="line">  webhook:</span><br><span class="line">    cacheAuthorizedTTL: 5m0s</span><br><span class="line">    cacheUnauthorizedTTL: 30s</span><br><span class="line">cgroupDriver: cgroupfs</span><br><span class="line">cgroupsPerQOS: true</span><br><span class="line">clusterDNS:</span><br><span class="line">- 10.96.0.10</span><br><span class="line">clusterDomain: cluster.local</span><br><span class="line">containerLogMaxFiles: 5</span><br><span class="line">containerLogMaxSize: 10Mi</span><br><span class="line">contentType: application/vnd.kubernetes.protobuf</span><br><span class="line">cpuCFSQuota: true</span><br><span class="line">cpuManagerPolicy: none</span><br><span class="line">cpuManagerReconcilePeriod: 10s</span><br><span class="line">enableControllerAttachDetach: true</span><br><span class="line">enableDebuggingHandlers: true</span><br><span class="line">enforceNodeAllocatable:</span><br><span class="line">- pods</span><br><span class="line">eventBurst: 10</span><br><span class="line">eventRecordQPS: 5</span><br><span class="line">evictionHard:</span><br><span class="line">  imagefs.available: 15%</span><br><span class="line">  memory.available: 100Mi</span><br><span class="line">  nodefs.available: 10%</span><br><span class="line">  nodefs.inodesFree: 5%</span><br><span class="line">evictionPressureTransitionPeriod: 5m0s</span><br><span class="line">failSwapOn: true</span><br><span class="line">fileCheckFrequency: 20s</span><br><span class="line">hairpinMode: promiscuous-bridge</span><br><span class="line">healthzBindAddress: 127.0.0.1</span><br><span class="line">healthzPort: 10248</span><br><span class="line">httpCheckFrequency: 20s</span><br><span class="line">imageGCHighThresholdPercent: 85</span><br><span class="line">imageGCLowThresholdPercent: 80</span><br><span class="line">imageMinimumGCAge: 2m0s</span><br><span class="line">iptablesDropBit: 15</span><br><span class="line">iptablesMasqueradeBit: 14</span><br><span class="line">kubeAPIBurst: 10</span><br><span class="line">kubeAPIQPS: 5</span><br><span class="line">makeIPTablesUtilChains: true</span><br><span class="line">maxOpenFiles: 1000000</span><br><span class="line">maxPods: 110</span><br><span class="line">nodeStatusUpdateFrequency: 10s</span><br><span class="line">oomScoreAdj: -999</span><br><span class="line">podPidsLimit: -1</span><br><span class="line">registryBurst: 10</span><br><span class="line">registryPullQPS: 5</span><br><span class="line">resolvConf: /etc/resolv.conf</span><br><span class="line">rotateCertificates: true</span><br><span class="line">runtimeRequestTimeout: 2m0s</span><br><span class="line">serializeImagePulls: true</span><br><span class="line">staticPodPath: /etc/kubernetes/manifests</span><br><span class="line">streamingConnectionIdleTimeout: 4h0m0s</span><br><span class="line">syncFrequency: 1m0s</span><br><span class="line">volumeStatsAggPeriod: 1m0s</span><br></pre></td></tr></table></figure>
-<p>在 <code>k8s-m3</code> 在 <code>k8s-m3</code> 關閉 Swap。</p>
+<p>在 <code>k8s-m3</code> 關閉 Swap。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ swapoff -a &amp;&amp; sysctl -w vm.swappiness=0</span><br><span class="line"></span><br><span class="line">vm.swappiness = 0</span><br></pre></td></tr></table></figure>
 <p>在 <code>k8s-m3</code> 建立 <code>/etc/kubernetes/manifests</code> 與 <code>/etc/cni/net.d</code> 目錄。</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/kubernetes/manifests</span><br><span class="line">$ mkdir -p /etc/cni/net.d</span><br></pre></td></tr></table></figure>
@@ -708,6 +709,13 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/03/01/在-Linux-取得檔案建立時間/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">利用 Golang 在 Linux 取得檔案建立時間</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2021/02/08/PKI-驗證解析/">
@@ -787,7 +795,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        11
+                        12
                     </p>
                 </div>
             </div>
@@ -797,7 +805,7 @@
                         分類
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -807,7 +815,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        13
+                        15
                     </p>
                 </div>
             </div>
@@ -878,6 +886,14 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Golang/">
+            <span class="level-start">
+                <span class="level-item">Golang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/Kubernetes/">
             <span class="level-start">
                 <span class="level-item">Kubernetes</span>
@@ -937,6 +953,19 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-01T06:07:00.000Z">2021-03-01</time></div>
+                    <a href="/2021/03/01/在-Linux-取得檔案建立時間/" class="title has-link-black-ter is-size-6 has-text-weight-normal">利用 Golang 在 Linux 取得檔案建立時間</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Golang/">Golang</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-08T09:44:00.000Z">2021-02-08</time></div>
                     <a href="/2021/02/08/從-Source-Codes-開始打造-HA-Kubernetes-Cluster/" class="title has-link-black-ter is-size-6 has-text-weight-normal">從 Source Codes 開始打造 HA Kubernetes Cluster</a>
                     <p class="is-size-7 is-uppercase">
@@ -985,19 +1014,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-25T08:12:00.000Z">2020-10-25</time></div>
-                    <a href="/2020/10/25/HAProxy-Data-Plane-API/" class="title has-link-black-ter is-size-6 has-text-weight-normal">動態配置 HAProxy Configuration </a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/load-balancer/">load balancer</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1009,6 +1025,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2021/02/">
@@ -1136,6 +1163,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Golang/">
+                        <span class="tag">Golang</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Keystone/">
                         <span class="tag">Keystone</span>
                         <span class="tag is-grey">2</span>
@@ -1146,6 +1180,13 @@
                     <a class="tags has-addons" href="/tags/Kubernetes/">
                         <span class="tag">Kubernetes</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Linux/">
+                        <span class="tag">Linux</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1218,6 +1259,19 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-01T06:07:00.000Z">2021-03-01</time></div>
+                    <a href="/2021/03/01/在-Linux-取得檔案建立時間/" class="title has-link-black-ter is-size-6 has-text-weight-normal">利用 Golang 在 Linux 取得檔案建立時間</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Golang/">Golang</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-08T09:44:00.000Z">2021-02-08</time></div>
                     <a href="/2021/02/08/從-Source-Codes-開始打造-HA-Kubernetes-Cluster/" class="title has-link-black-ter is-size-6 has-text-weight-normal">從 Source Codes 開始打造 HA Kubernetes Cluster</a>
                     <p class="is-size-7 is-uppercase">
@@ -1266,19 +1320,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-25T08:12:00.000Z">2020-10-25</time></div>
-                    <a href="/2020/10/25/HAProxy-Data-Plane-API/" class="title has-link-black-ter is-size-6 has-text-weight-normal">動態配置 HAProxy Configuration </a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/load-balancer/">load balancer</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1290,6 +1331,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2021/02/">
@@ -1417,6 +1469,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Golang/">
+                        <span class="tag">Golang</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Keystone/">
                         <span class="tag">Keystone</span>
                         <span class="tag is-grey">2</span>
@@ -1427,6 +1486,13 @@
                     <a class="tags has-addons" href="/tags/Kubernetes/">
                         <span class="tag">Kubernetes</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Linux/">
+                        <span class="tag">Linux</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
